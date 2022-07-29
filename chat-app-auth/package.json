@@ -1,0 +1,28 @@
+{
+  "name": "chat-app-auth",
+  "version": "1.0.0",
+  "description": "Chat App Authentication webhook",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sami Oksanen",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "express-validator": "^6.14.2",
+    "knex": "^2.2.0",
+    "objection": "^3.0.1",
+    "objection-db-errors": "^1.1.2",
+    "passport": "^0.6.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
+    "pg": "^8.7.3",
+    "util": "^0.12.4"
+  }
+}

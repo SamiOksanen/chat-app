@@ -1,0 +1,22 @@
+/*@import '~antd/dist/antd.css';*/
+/*@import '~antd/dist/antd.dark.css';*/
+/*@import '~antd/dist/antd.compact.css';*/
+
+h1 {
+    font-family: 'Amatic SC', cursive !important;
+    color: #00aaaa !important;
+}
+
+h2, h3, h4 {
+    font-family: 'Amatic SC', cursive !important;
+}
+
+.App {
+    text-align: center;
+}
+
+@font-face {
+    font-family: 'Amatic SC';
+    src: url('assets/fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf');
+}
+

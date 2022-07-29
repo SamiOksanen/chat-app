@@ -1,0 +1,70 @@
+version: '3.9'
+services:
+    chat-app-db:
+        image: postgres:14.4
+        restart: unless-stopped
+        env_file:
+            - ./chat-app-db/database.env
+        volumes:
+            - database-data:/var/lib/postgresql/data
+            - ./chat-app-db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+        ports:
+            - '5433:5432'
+        networks:
+            - chat-app-net
+    chat-app-auth:
+        build: 
+            context: ./chat-app-auth
+        restart: unless-stopped
+        depends_on:
+            - "chat-app-db"
+        environment:
+            DATABASE_URL: postgres://chatapp:chatapp@chat-app-db:5432/chatapp
+        volumes:
+            - ./chat-app-auth:/usr/src/app
+            - /usr/src/app/node_modules
+        ports:
+            - '8085:8084'
+        networks: 
+            - chat-app-net
+    chat-app-graphql-engine:
+        image: hasura/graphql-engine:v2.8.4
+        depends_on:
+            - "chat-app-db"
+            - "chat-app-auth"
+        restart: unless-stopped
+        environment:
+            HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://chatapp:chatapp@chat-app-db:5432/chatapp
+            HASURA_GRAPHQL_DATABASE_URL: postgres://chatapp:chatapp@chat-app-db:5432/chatapp
+            HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+            HASURA_GRAPHQL_DEV_MODE: "true"
+            HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+            HASURA_GRAPHQL_ADMIN_SECRET: chatappadminsecretkey
+            HASURA_GRAPHQL_AUTH_HOOK: http://chat-app-auth:8084/webhook
+        ports:
+            - "8081:8080"
+        networks:
+            - chat-app-net
+    chat-app-front:
+        build:
+            context: ./chat-app-front
+        restart: unless-stopped
+        depends_on:
+            - "chat-app-graphql-engine"
+        environment:
+            - CHOKIDAR_USEPOLLING=true
+            - REACT_APP_API_URL=http://localhost:8081
+            - REACT_APP_AUTH_API_URL=http://localhost:8085
+            - WDS_SOCKET_PORT=0
+        volumes:
+            - ./chat-app-front:/usr/src/app
+            - /usr/src/app/node_modules
+        ports:
+            - '81:3000'
+        networks:
+            - chat-app-net
+volumes:
+    database-data:
+networks:
+    chat-app-net:
+        name: chat-app-net
