@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
+const cors = require('cors');
 
 /**
  * Controllers (route handlers).
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 app.use(session({secret: 'SECRET', resave: true, saveUninitialized: true}));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors());
 
 app.post('/login', userController.postLogin);
 app.post('/signup', userController.postSignup);

@@ -1,7 +1,6 @@
 import { SendOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Input, MenuProps, Radio, Space } from 'antd';
 import { Typography, Layout, Menu } from 'antd';
-import { send } from 'process';
 import React, { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../App';
 
@@ -33,6 +32,8 @@ const items: MenuItem[] = [
 ];
 
 const ChatLayout = () => {
+    const { theme, changeTheme } = useContext(ThemeContext);
+
     const [collapsed, setCollapsed] = useState(false);
 
     const [selectedMenuItem, setSelectedMenuItem] = useState('');
@@ -72,6 +73,12 @@ const ChatLayout = () => {
                     <Input value={messageInput} onChange={(x) => setMessageInput(x.target.value)} onPressEnter={sendMessage} placeholder="Write Message..." style={{ width: 'calc(100% - 200px)', textAlign: 'left' }}/>
                     <Button type="primary" onClick={sendMessage}><SendOutlined /></Button>
                 </Input.Group>
+                <Radio.Group value={theme || 'light'} onChange={e => changeTheme && changeTheme(e.target.value)} style={{ padding: 16 }}>
+                        <Radio.Button value="light">Default</Radio.Button>
+                        <Radio.Button value="dark">Dark</Radio.Button>
+                        <Radio.Button value="compact">Compact</Radio.Button>
+                </Radio.Group>
+                <Footer style={{ textAlign: 'center' }}>Chat App ©2022 Created by Sami Oksanen</Footer>
             </Layout>
         </>
     );
