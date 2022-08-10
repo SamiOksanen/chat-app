@@ -1,12 +1,12 @@
-import { Alert, AlertProps, Layout, Radio } from 'antd';
-import { Footer } from 'antd/lib/layout/layout';
-import { Context, createContext, SetStateAction, useEffect, useState } from 'react';
+import { AlertProps, Layout } from 'antd';
+import { Context, createContext, useState } from 'react';
 import './App.css';
 import ChatLayout from './components/ChatLayout';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoginForm from './components/LoginForm';
 import FlexAlert from './components/FlexAlert';
-import userEvent from '@testing-library/user-event';
+import { ApolloProvider } from '@apollo/client';
+import client from './apollo';
 
 export const ThemeContext: Context<{ theme?: string, changeTheme?: Function }> = createContext({});
 
@@ -65,13 +65,18 @@ const App = () => {
                     <AlertContext.Provider value={{ alert, changeAlert }}>
                         <UserContext.Provider value={{ user, changeUser }}>
                             {!user && <LoginForm />}
-                            {user && <ChatLayout />}
+                            {
+                                user &&
+                                <ApolloProvider client={client}>
+                                    <ChatLayout />
+                                </ApolloProvider>
+                            }
                             {alert && <FlexAlert {...alert} />}
                         </UserContext.Provider>
                     </AlertContext.Provider>
                 </ThemeContext.Provider>
             </Layout>
-        </ErrorBoundary>
+        </ErrorBoundary >
 
     );
 }

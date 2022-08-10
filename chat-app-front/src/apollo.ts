@@ -4,8 +4,8 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { setContext } from '@apollo/client/link/context';
 
-const httpUri = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : 'https://' + window.location.host + '/api/graphql';
-const wsUri = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL.replace(/^http?/, 'ws') : 'wss://' + window.location.host + '/api/graphql';
+const httpUri = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : 'https://' + window.location.host + '/api/v1/graphql';
+const wsUri = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL.replace(/^http?/, 'ws') : 'wss://' + window.location.host + '/api/v1/graphql';
 
 const httpLink = new HttpLink({
     uri: httpUri,
