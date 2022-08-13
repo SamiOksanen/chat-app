@@ -2,7 +2,7 @@ import { SendOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Input, MenuProps, Radio, Space } from 'antd';
 import { Layout, Menu } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
-import { ThemeContext } from '../App';
+import { ThemeContext } from './themes/ThemeProvider';
 import { gql, useMutation, useSubscription } from '@apollo/client';
 import ConversationMessageList from './ConverationMessageList';
 

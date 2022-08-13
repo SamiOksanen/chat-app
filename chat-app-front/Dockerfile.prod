@@ -4,7 +4,6 @@ WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 COPY package*.json ./
 RUN npm i --silent
-RUN npm i react-scripts -g --silent
 COPY . ./
 RUN npm run build
 

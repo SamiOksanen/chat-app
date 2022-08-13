@@ -7,8 +7,7 @@ import LoginForm from './components/LoginForm';
 import FlexAlert from './components/FlexAlert';
 import { ApolloProvider } from '@apollo/client';
 import client from './apollo';
-
-export const ThemeContext: Context<{ theme?: string, changeTheme?: Function }> = createContext({});
+import ThemeProvider from './components/themes/ThemeProvider';
 
 export interface UserProps {
     userid: string | null,
@@ -43,25 +42,10 @@ const App = () => {
         setAlert(newAlert);
     }
 
-    const theme = localStorage.getItem('theme') || 'light';
-
-    if (theme === 'compact') {
-        require('antd/dist/antd.compact.css');
-    } else if (theme === 'dark') {
-        require('antd/dist/antd.dark.css');
-    } else {
-        require('antd/dist/antd.css');
-    }
-
-    const changeTheme = (newTheme: string) => {
-        localStorage.setItem('theme', newTheme);
-        window.location.reload();
-    };
-
     return (
         <ErrorBoundary>
-            <Layout className="App" style={{ minHeight: '100vh' }}>
-                <ThemeContext.Provider value={{ theme, changeTheme }}>
+            <ThemeProvider>
+                <Layout className="App" style={{ minHeight: '100vh' }}>
                     <AlertContext.Provider value={{ alert, changeAlert }}>
                         <UserContext.Provider value={{ user, changeUser }}>
                             {!user && <LoginForm />}
@@ -74,10 +58,9 @@ const App = () => {
                             {alert && <FlexAlert {...alert} />}
                         </UserContext.Provider>
                     </AlertContext.Provider>
-                </ThemeContext.Provider>
-            </Layout>
+                </Layout>
+            </ThemeProvider>
         </ErrorBoundary >
-
     );
 }
 

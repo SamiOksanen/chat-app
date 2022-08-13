@@ -1,11 +1,11 @@
-import { Button, Checkbox, Form, Input, Layout, Typography } from 'antd';
+import { Button, Checkbox, Form, Input, Typography } from 'antd';
 import { Footer } from 'antd/lib/layout/layout';
 import { useContext } from 'react';
 import { AlertContext, UserContext } from '../App';
 
 const { Title } = Typography;
 
-const authUri = process.env.REACT_APP_AUTH_API_URL ? process.env.REACT_APP_AUTH_API_URL : '/auth';
+const authUri = import.meta.env.VITE_APP_AUTH_API_URL ? import.meta.env.VITE_APP_AUTH_API_URL : '/auth';
 
 const LoginForm = () => {
     const { changeUser } = useContext(UserContext);
