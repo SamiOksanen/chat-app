@@ -1,6 +1,6 @@
 # Chat App
 
-Application for having conversations with other users individually and in groups. Uses React and Ant Design for the user interface, Postgres as the database, Node.js Passport for authentication and Hasura GraphQL engine for connecting everything together.
+Application for having conversations with other users individually and in groups. Uses React and Ant Design for the user interface, Postgres as the database, Node.js Passport for authentication and Hasura GraphQL engine for connecting everything together. Database migrations are handled with Hasura migrations.
 
 ## Setup 🪄
 
@@ -9,8 +9,9 @@ Application for having conversations with other users individually and in groups
 - Docker
 - Hasura CLI
 
-### Install dependencies
+### Install dependencies in `chat-app-auth` and `chat-app-front` directories
 ```bash
+cd <dir>
 npm i
 ```
 
