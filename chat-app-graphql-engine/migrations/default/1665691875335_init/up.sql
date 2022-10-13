@@ -1,3 +1,5 @@
+SET check_function_bodies = false;
+
 CREATE TABLE users(
     userid serial PRIMARY KEY,
     username VARCHAR (255) UNIQUE NOT NULL,

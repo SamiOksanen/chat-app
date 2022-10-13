@@ -1,0 +1,56 @@
+table:
+  schema: public
+  name: conversations
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: adminid
+array_relationships:
+  - name: conversationusers
+    using:
+      foreign_key_constraint_on:
+        column: conversationid
+        table:
+          schema: public
+          name: conversationusers
+  - name: messages
+    using:
+      foreign_key_constraint_on:
+        column: conversationid
+        table:
+          schema: public
+          name: messages
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - avatarimage
+        - groupflag
+        - groupname
+        - adminid
+        - conversationid
+        - createdt
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - avatarimage
+        - groupflag
+        - groupname
+        - adminid
+        - conversationid
+        - createdt
+      filter: {}
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - avatarimage
+        - groupflag
+        - groupname
+        - adminid
+        - conversationid
+        - createdt
+      filter: {}
+      check: {}

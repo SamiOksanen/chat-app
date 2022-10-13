@@ -1,0 +1,25 @@
+table:
+  schema: public
+  name: users
+array_relationships:
+  - name: conversations
+    using:
+      foreign_key_constraint_on:
+        column: adminid
+        table:
+          schema: public
+          name: conversations
+  - name: conversationusers
+    using:
+      foreign_key_constraint_on:
+        column: userid
+        table:
+          schema: public
+          name: conversationusers
+  - name: messages
+    using:
+      foreign_key_constraint_on:
+        column: userid
+        table:
+          schema: public
+          name: messages

@@ -1,0 +1,46 @@
+table:
+  schema: public
+  name: messages
+object_relationships:
+  - name: conversation
+    using:
+      foreign_key_constraint_on: conversationid
+  - name: user
+    using:
+      foreign_key_constraint_on: userid
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - conversationid
+        - messageid
+        - userid
+        - message
+        - createdt
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - conversationid
+        - messageid
+        - userid
+        - message
+        - createdt
+      filter: {}
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - conversationid
+        - messageid
+        - userid
+        - message
+        - createdt
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: user
+    permission:
+      backend_only: false
+      filter: {}
