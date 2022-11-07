@@ -7,7 +7,9 @@ h1 {
     color: #00aaaa !important;
 }
 
-h2, h3, h4 {
+h2,
+h3,
+h4 {
     font-family: 'Amatic SC', cursive !important;
 }
 
@@ -15,8 +17,11 @@ h2, h3, h4 {
     text-align: center;
 }
 
+.ant-layout-header {
+    font-family: 'Amatic SC', cursive !important;
+}
+
 @font-face {
     font-family: 'Amatic SC';
     src: url('assets/fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf');
 }
-

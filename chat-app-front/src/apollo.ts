@@ -4,19 +4,36 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { setContext } from '@apollo/client/link/context';
 
-const httpUri = import.meta.env.VITE_APP_API_URL ? import.meta.env.VITE_APP_API_URL : (window.location.protocol === 'https:' ? 'https://' : 'http://') + window.location.host + '/api/v1/graphql';
-const wsUri = import.meta.env.VITE_APP_API_URL ? import.meta.env.VITE_APP_API_URL.replace(/^https:/, 'wss:').replace(/^http:/, 'ws:') : (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/api/v1/graphql'; 
+const httpUri = import.meta.env.VITE_APP_API_URL
+    ? import.meta.env.VITE_APP_API_URL
+    : (window.location.protocol === 'https:' ? 'https://' : 'http://') +
+      window.location.host +
+      '/api/v1/graphql';
+const wsUri = import.meta.env.VITE_APP_API_URL
+    ? import.meta.env.VITE_APP_API_URL.replace(/^https:/, 'wss:').replace(
+          /^http:/,
+          'ws:'
+      )
+    : (window.location.protocol === 'https:' ? 'wss://' : 'ws://') +
+      window.location.host +
+      '/api/v1/graphql';
 
 const httpLink = new HttpLink({
     uri: httpUri,
 });
 
-const wsLink = new GraphQLWsLink(createClient({
-    url: wsUri,
-    connectionParams: () => {
-        return { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } };
-    },
-}));
+const wsLink = new GraphQLWsLink(
+    createClient({
+        url: wsUri,
+        connectionParams: () => {
+            return {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            };
+        },
+    })
+);
 
 const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
@@ -25,9 +42,9 @@ const authLink = setContext((_, { headers }) => {
     return {
         headers: {
             ...headers,
-            authorization: token ? `Bearer ${token}` : "",
-        }
-    }
+            authorization: token ? `Bearer ${token}` : '',
+        },
+    };
 });
 
 // The split function takes three parameters:
@@ -44,12 +61,12 @@ const splitLink = split(
         );
     },
     wsLink,
-    authLink.concat(httpLink),
+    authLink.concat(httpLink)
 );
 
 const client = new ApolloClient({
     link: splitLink,
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
 });
 
 export default client;

@@ -9,6 +9,8 @@
 ![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white) \
 Application for having conversations with other users individually and in groups. Uses React and Ant Design for the user interface, Postgres as the database, Node.js Passport for authentication and Hasura GraphQL engine for connecting everything together. Database migrations are handled with Hasura migrations.
 
+🚧 In Progress 🚧
+
 ## Setup 🪄
 
 ### Install:
