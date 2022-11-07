@@ -23,7 +23,9 @@ const ChatHeader = () => {
             <Tooltip title="Log out">
                 <Button
                     type="primary"
-                    onClick={() => changeUser!({ userid: null, token: null })}
+                    onClick={() =>
+                        changeUser && changeUser({ userid: null, token: null })
+                    }
                     shape="default"
                     icon={<LogoutOutlined />}
                     size="large"

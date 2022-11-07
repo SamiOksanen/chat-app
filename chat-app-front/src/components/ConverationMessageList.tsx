@@ -3,8 +3,12 @@ import { Layout, Space, Typography } from 'antd';
 const { Content } = Layout;
 const { Text } = Typography;
 
+export type Messages = {
+    messages: [];
+};
+
 interface MessageSubscription {
-    data: { messages: [] };
+    data?: Messages;
     loading: boolean;
 }
 

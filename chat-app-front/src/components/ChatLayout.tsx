@@ -4,8 +4,9 @@ import { Layout, Menu } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from './themes/ThemeProvider';
 import { gql, useMutation, useSubscription } from '@apollo/client';
-import ConversationMessageList from './ConverationMessageList';
+import ConversationMessageList, { Messages } from './ConverationMessageList';
 import ChatHeader from './ChatHeader';
+import { AlertContext } from '../App';
 
 const { Footer, Sider } = Layout;
 
@@ -71,6 +72,8 @@ const ChatLayout = () => {
 
     const { theme, changeTheme } = useContext(ThemeContext);
 
+    const { changeAlert } = useContext(AlertContext);
+
     const [collapsed, setCollapsed] = useState(false);
 
     const [selectedMenuItem, setSelectedMenuItem] = useState('');
@@ -84,11 +87,20 @@ const ChatLayout = () => {
     const sendMessage = () => {
         addMessage({
             variables: { conversationid: 1, userid: 1, message: messageInput },
-        });
-        setMessageInput('');
+        })
+            .then(() => setMessageInput(''))
+            .catch((error) => {
+                console.error(error);
+                changeAlert &&
+                    changeAlert({
+                        message: 'Error',
+                        description: (error as Error).message,
+                        type: 'error',
+                    });
+            });
     };
 
-    const { data, loading } = useSubscription(MESSAGES_SUBSCRIPTION, {
+    const { data, loading } = useSubscription<Messages>(MESSAGES_SUBSCRIPTION, {
         variables: { conversationid: 1 },
     });
 
@@ -134,7 +146,9 @@ const ChatLayout = () => {
                 </Input.Group>
                 <Radio.Group
                     value={theme || 'light'}
-                    onChange={(e) => changeTheme && changeTheme(e.target.value)}
+                    onChange={(e) =>
+                        changeTheme && changeTheme(e.target.value as string)
+                    }
                     style={{ padding: 16 }}
                 >
                     <Radio.Button value="light">Default</Radio.Button>

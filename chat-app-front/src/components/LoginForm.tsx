@@ -1,10 +1,16 @@
 import { Button, Checkbox, Form, Input, Typography } from 'antd';
 import { Footer } from 'antd/lib/layout/layout';
 import { useContext, useState } from 'react';
-import { AlertContext, UserContext } from '../App';
+import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
+import { AlertContext, UserContext, UserProps } from '../App';
 import SignUpForm from './SignUpForm';
 
 const { Title } = Typography;
+
+type UserLogin = {
+    username: string;
+    password: string;
+};
 
 const authUri = import.meta.env.VITE_APP_AUTH_API_URL
     ? import.meta.env.VITE_APP_AUTH_API_URL
@@ -16,7 +22,7 @@ const LoginForm = () => {
 
     const [showSignUp, setShowSignUp] = useState(false);
 
-    const onFinish = (values: any) => {
+    const onFinish = (values: UserLogin) => {
         console.log('Success:', values);
 
         const myHeaders = new Headers();
@@ -39,19 +45,19 @@ const LoginForm = () => {
                 }
                 throw new Error('Login failed');
             })
-            .then((result) => changeUser && changeUser(result))
+            .then((result) => changeUser && changeUser(result as UserProps))
             .catch((error) => {
                 console.error(error);
                 changeAlert &&
                     changeAlert({
                         message: 'Error',
-                        description: error.message,
+                        description: (error as Error).message,
                         type: 'error',
                     });
             });
     };
 
-    const onFinishFailed = (errorInfo: any) => {
+    const onFinishFailed = (errorInfo: ValidateErrorEntity) => {
         console.log('Failed:', errorInfo);
     };
 

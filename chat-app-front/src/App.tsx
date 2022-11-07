@@ -23,7 +23,7 @@ export const UserContext: Context<{
 
 export const AlertContext: Context<{
     alert?: AlertProps | null;
-    changeAlert?: Function;
+    changeAlert?: (newAlert: AlertProps | null) => void;
 }> = createContext({});
 
 const App = () => {

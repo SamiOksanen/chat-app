@@ -2,7 +2,7 @@ import { Button, Form, Input, Typography } from 'antd';
 import { Footer } from 'antd/lib/layout/layout';
 import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
 import { useContext } from 'react';
-import { AlertContext, UserContext } from '../App';
+import { AlertContext, UserContext, UserProps } from '../App';
 
 const { Title } = Typography;
 
@@ -50,13 +50,13 @@ const SignUpForm = ({ showLoginForm }: SignUpFormProps) => {
                 }
                 throw new Error('Sign up failed');
             })
-            .then((result) => changeUser && changeUser(result))
+            .then((result) => changeUser && changeUser(result as UserProps))
             .catch((error) => {
                 console.error(error);
                 changeAlert &&
                     changeAlert({
                         message: 'Error',
-                        description: error.message,
+                        description: (error as Error).message,
                         type: 'error',
                     });
             });
