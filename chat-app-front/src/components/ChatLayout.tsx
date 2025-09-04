@@ -91,12 +91,11 @@ const ChatLayout = () => {
             .then(() => setMessageInput(''))
             .catch((error) => {
                 console.error(error);
-                changeAlert &&
-                    changeAlert({
-                        message: 'Error',
-                        description: (error as Error).message,
-                        type: 'error',
-                    });
+                changeAlert?.({
+                    message: 'Error',
+                    description: (error as Error).message,
+                    type: 'error',
+                });
             });
     };
 
