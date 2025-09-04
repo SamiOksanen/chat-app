@@ -6,8 +6,9 @@
 ![image](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
 ![image](https://img.shields.io/badge/Ant%20Design-1890FF?style=for-the-badge&logo=antdesign&logoColor=white)
 ![image](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
-![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white) \
-Application for having conversations with other users individually and in groups. Uses React and Ant Design for the user interface, Postgres as the database, Node.js Passport for authentication and Hasura GraphQL engine for connecting everything together. Database migrations are handled with Hasura migrations.
+![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+
+Application for having conversations with other users individually and in groups. Uses React and Ant Design for the user interface, Postgres as the database, Node.js Passport for authentication and Hasura GraphQL engine for connecting everything together. Database migrations are handled with Hasura migrations. This is a hobby project I have used for trying out things like Hasura, Ant Design and developing with Claude Code. **This project is not meant for any real production use.**
 
 🚧 In Progress 🚧
 
@@ -31,8 +32,7 @@ npm i
 
 ## Run the app in development mode
 ```bash
-docker-compose build
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 ### Cleanup in development mode 🧹
@@ -42,8 +42,7 @@ docker-compose down
 
 ## Run the app in production mode
 ```bash
-docker-compose -f docker-compose.prod.yaml build
-docker-compose -f docker-compose.prod.yaml up -d
+docker-compose -f docker-compose.prod.yaml up -d --build
 ```
 
 ### Cleanup in production mode 🧹
