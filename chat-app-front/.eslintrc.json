@@ -13,5 +13,6 @@
     "rules": {
         "prettier/prettier": "warn",
         "@typescript-eslint/require-await": "off"
-    }
+    },
+    "baseUrl": "./"
 }
