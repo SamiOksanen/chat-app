@@ -48,12 +48,11 @@ const LoginForm = () => {
             .then((result) => changeUser && changeUser(result as UserProps))
             .catch((error) => {
                 console.error(error);
-                changeAlert &&
-                    changeAlert({
-                        message: 'Error',
-                        description: (error as Error).message,
-                        type: 'error',
-                    });
+                changeAlert?.({
+                    message: 'Error',
+                    description: (error as Error).message,
+                    type: 'error',
+                });
             });
     };
 
