@@ -1,5 +1,5 @@
 import { SendOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Input, MenuProps, Radio } from 'antd';
+import { Button, Input, MenuProps, Radio, Space } from 'antd';
 import { Layout, Menu } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from './themes/ThemeProvider';
@@ -128,7 +128,9 @@ const ChatLayout = () => {
                     loading={loading}
                 ></ConversationMessageList>
 
-                <Input.Group compact>
+                <Space.Compact
+                    style={{ width: '100%', justifyContent: 'center' }}
+                >
                     <Input
                         value={messageInput}
                         onChange={(x) => setMessageInput(x.target.value)}
@@ -142,7 +144,7 @@ const ChatLayout = () => {
                     <Button type="primary" onClick={sendMessage}>
                         <SendOutlined />
                     </Button>
-                </Input.Group>
+                </Space.Compact>
                 <Radio.Group
                     value={theme || 'light'}
                     onChange={(e) =>

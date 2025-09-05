@@ -1,8 +1,6 @@
-import { createContext, lazy, ReactNode, Suspense } from 'react';
-
-const CompactTheme = lazy(() => import('./CompactTheme'));
-const DarkTheme = lazy(() => import('./DarkTheme'));
-const LightTheme = lazy(() => import('./LightTheme'));
+import { createContext, ReactNode } from 'react';
+import { ConfigProvider, theme } from 'antd';
+import 'antd/dist/reset.css';
 
 export const ThemeContext = createContext<{
     theme?: string;
@@ -10,28 +8,36 @@ export const ThemeContext = createContext<{
 }>({});
 
 const ThemeProvider = ({ children }: { children: ReactNode }) => {
-    const theme = localStorage.getItem('theme') || 'light';
+    const currentTheme = localStorage.getItem('theme') || 'light';
 
     const changeTheme = (newTheme: string) => {
         localStorage.setItem('theme', newTheme);
         window.location.reload();
     };
 
+    const getThemeConfig = () => {
+        switch (currentTheme) {
+            case 'dark':
+                return {
+                    algorithm: theme.darkAlgorithm,
+                };
+            case 'compact':
+                return {
+                    algorithm: theme.compactAlgorithm,
+                };
+            default:
+                return {
+                    algorithm: theme.defaultAlgorithm,
+                };
+        }
+    };
+
     return (
-        <>
-            <Suspense fallback={<span />}>
-                {theme === 'compact' ? (
-                    <CompactTheme />
-                ) : theme === 'dark' ? (
-                    <DarkTheme />
-                ) : (
-                    <LightTheme />
-                )}
-                <ThemeContext.Provider value={{ theme, changeTheme }}>
-                    {children}
-                </ThemeContext.Provider>
-            </Suspense>
-        </>
+        <ConfigProvider theme={getThemeConfig()}>
+            <ThemeContext.Provider value={{ theme: currentTheme, changeTheme }}>
+                {children}
+            </ThemeContext.Provider>
+        </ConfigProvider>
     );
 };
 
