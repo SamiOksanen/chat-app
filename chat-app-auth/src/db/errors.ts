@@ -1,7 +1,10 @@
-const {
+import { Response } from 'express';
+import {
     ValidationError,
     NotFoundError
-} = require('objection');
+} from 'objection';
+
+import objectionDbErrors from 'objection-db-errors';
 
 const {
     DBError,
@@ -10,10 +13,11 @@ const {
     ForeignKeyViolationError,
     CheckViolationError,
     DataError
-} = require('objection-db-errors');
+} = objectionDbErrors;
 
-// In this example `res` is an express response object.
-function errorHandler(err, res) {
+import type { ErrorResponse } from '../types/index.js';
+
+export function errorHandler(err: Error, res: Response): void {
     if (err instanceof ValidationError) {
         switch (err.type) {
             case 'ModelValidation':
@@ -21,35 +25,35 @@ function errorHandler(err, res) {
                     message: err.message,
                     type: 'ModelValidation',
                     data: err.data
-                });
+                } satisfies ErrorResponse);
                 break;
             case 'RelationExpression':
                 res.status(400).send({
                     message: err.message,
                     type: 'InvalidRelationExpression',
                     data: {}
-                });
+                } satisfies ErrorResponse);
                 break;
             case 'UnallowedRelation':
                 res.status(400).send({
                     message: err.message,
                     type: 'UnallowedRelation',
                     data: {}
-                });
+                } satisfies ErrorResponse);
                 break;
             case 'InvalidGraph':
                 res.status(400).send({
                     message: err.message,
                     type: 'InvalidGraph',
                     data: {}
-                });
+                } satisfies ErrorResponse);
                 break;
             default:
                 res.status(400).send({
                     message: err.message,
                     type: 'UnknownValidationError',
                     data: {}
-                });
+                } satisfies ErrorResponse);
                 break;
         }
     } else if (err instanceof NotFoundError) {
@@ -57,7 +61,7 @@ function errorHandler(err, res) {
             message: err.message,
             type: 'NotFound',
             data: {}
-        });
+        } satisfies ErrorResponse);
     } else if (err instanceof UniqueViolationError) {
         res.status(409).send({
             message: err.message,
@@ -67,7 +71,7 @@ function errorHandler(err, res) {
                 table: err.table,
                 constraint: err.constraint
             }
-        });
+        } satisfies ErrorResponse);
     } else if (err instanceof NotNullViolationError) {
         res.status(400).send({
             message: err.message,
@@ -76,7 +80,7 @@ function errorHandler(err, res) {
                 column: err.column,
                 table: err.table,
             }
-        });
+        } satisfies ErrorResponse);
     } else if (err instanceof ForeignKeyViolationError) {
         res.status(409).send({
             message: err.message,
@@ -85,7 +89,7 @@ function errorHandler(err, res) {
                 table: err.table,
                 constraint: err.constraint
             }
-        });
+        } satisfies ErrorResponse);
     } else if (err instanceof CheckViolationError) {
         res.status(400).send({
             message: err.message,
@@ -94,26 +98,24 @@ function errorHandler(err, res) {
                 table: err.table,
                 constraint: err.constraint
             }
-        });
+        } satisfies ErrorResponse);
     } else if (err instanceof DataError) {
         res.status(400).send({
             message: err.message,
             type: 'InvalidData',
             data: {}
-        });
+        } satisfies ErrorResponse);
     } else if (err instanceof DBError) {
         res.status(500).send({
             message: err.message,
             type: 'UnknownDatabaseError',
             data: {}
-        });
+        } satisfies ErrorResponse);
     } else {
         res.status(500).send({
             message: err.message,
             type: 'UnknownError',
             data: {}
-        });
+        } satisfies ErrorResponse);
     }
 }
-
-module.exports = { errorHandler }

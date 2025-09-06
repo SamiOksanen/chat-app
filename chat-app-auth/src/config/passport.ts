@@ -1,33 +1,33 @@
-const passport = require('passport');
-const { Strategy: LocalStrategy } = require('passport-local');
-const { Strategy: BearerStrategy } = require('passport-http-bearer');
-const { User } = require('../db/schema');
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as BearerStrategy } from 'passport-http-bearer';
+import { User } from '../db/schema.js';
 
 passport.use(
     new LocalStrategy({
         usernameField: 'username',
         passwordField: 'password'
     },
-        function (username, password, done) {
+        function (username: string, password: string, done: (error: any, user?: any) => void) {
             User
                 .query()
                 .where('username', username).orWhere('email', username)
                 .first()
                 .then(function (user) {
                     if (!user) { return done('Unknown user'); }
-                    user.verifyPassword(password, function (err, passwordCorrect) {
+                    user.verifyPassword(password, function (err: Error | undefined, passwordCorrect: boolean) {
                         if (err) { return done(err); }
                         if (!passwordCorrect) { return done('Invalid password'); }
-                        return done(null, user)
-                    })
-                }).catch(function (err) {
-                    done(err)
-                })
+                        return done(null, user);
+                    });
+                }).catch(function (err: Error) {
+                    done(err);
+                });
         }
     ));
 
 passport.use(new BearerStrategy(
-    function (token, done) {
+    function (token: string, done: (error: any, user?: any) => void) {
         User
             .query()
             .where('token', token)
@@ -35,10 +35,10 @@ passport.use(new BearerStrategy(
             .then(function (user) {
                 if (!user) { return done('Invalid Token'); }
                 return done(null, user);
-            }).catch(function (err) {
+            }).catch(function (err: Error) {
                 done(err);
             });
     }
 ));
 
-module.exports = passport;
+export default passport;

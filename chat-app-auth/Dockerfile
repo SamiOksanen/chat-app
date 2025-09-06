@@ -2,8 +2,9 @@ FROM node:22
 
 WORKDIR /usr/src/app
 COPY package*.json ./
+COPY tsconfig.json ./
+COPY nodemon.json ./
 RUN npm i --silent
-RUN npm i -g nodemon --no-optional --silent
-COPY . ./
+COPY src ./src
 
-CMD ["nodemon", "index.js"]
+CMD ["npm", "run", "dev:watch"]
