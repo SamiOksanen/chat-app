@@ -1,5 +1,5 @@
 const { promisify } = require('util');
-const Knex = require('knex');
+const { knex: Knex } = require('knex');
 const connection = require('../knexfile');
 const { Model } = require('objection');
 const bcrypt = require('bcrypt');

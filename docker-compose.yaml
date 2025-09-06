@@ -1,12 +1,12 @@
 version: "3.9"
 services:
     chat-app-db:
-        image: postgres:14.4
+        image: postgres:17
         restart: unless-stopped
         env_file:
             - ./chat-app-db/.env.local
         volumes:
-            - database-data:/var/lib/postgresql/data
+            - ./chat-app-db/data:/var/lib/postgresql/data
         ports:
             - "5433:5432"
         networks:
@@ -56,8 +56,6 @@ services:
             - "81:3000"
         networks:
             - chat-app-net
-volumes:
-    database-data:
 networks:
     chat-app-net:
         name: chat-app-net

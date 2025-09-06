@@ -1,0 +1,2 @@
+# This file ensures the chat-app-db directory is tracked by git
+# The data/ and data-prod/ subdirectories will be created by Docker and ignored by git
