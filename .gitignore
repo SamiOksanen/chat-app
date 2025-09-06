@@ -117,5 +117,9 @@ out
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# Database data directories
+chat-app-db/data/
+chat-app-db/data-prod/
+
 # misc
 .DS_Store
