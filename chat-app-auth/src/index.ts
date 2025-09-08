@@ -1,13 +1,17 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const passport = require('passport');
-const cors = require('cors');
+import express from 'express';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import passport from 'passport';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 /**
  * Controllers (route handlers).
  */
-const userController = require('./controllers/user');
+import * as userController from './controllers/user.js';
 
 /**
  * Create Express server.
@@ -20,7 +24,11 @@ const app = express();
 app.set('port', 8084);
 app.set('json spaces', 2); // number of spaces for indentation
 app.use(bodyParser.json());
-app.use(session({secret: 'SECRET', resave: true, saveUninitialized: true}));
+app.use(session({
+    secret: 'SECRET', 
+    resave: true, 
+    saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors());
@@ -47,4 +55,4 @@ app.listen(app.get('port'), () => {
     console.log(`Server listening port ${app.get('port')}`);
 });
 
-module.exports = app;
+export default app;
