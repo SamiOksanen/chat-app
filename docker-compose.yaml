@@ -17,6 +17,8 @@ services:
         restart: unless-stopped
         depends_on:
             - "chat-app-db"
+        env_file:
+            - ./chat-app-auth/.env.development.local
         environment:
             DATABASE_URL: postgres://chatapp:chatapp@chat-app-db:5432/chatapp
         volumes:

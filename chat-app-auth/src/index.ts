@@ -21,11 +21,19 @@ const app = express();
 /**
  * Express configuration.
  */
-app.set('port', 8084);
+const port = process.env['PORT'] || 8084;
+const sessionSecret = process.env['SESSION_SECRET'];
+
+if (!sessionSecret) {
+    console.error('SESSION_SECRET environment variable is required');
+    process.exit(1);
+}
+
+app.set('port', port);
 app.set('json spaces', 2); // number of spaces for indentation
 app.use(bodyParser.json());
 app.use(session({
-    secret: 'SECRET', 
+    secret: sessionSecret, 
     resave: true, 
     saveUninitialized: true
 }));

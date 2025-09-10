@@ -19,6 +19,8 @@ services:
             dockerfile: Dockerfile.prod
         depends_on:
             - "chat-app-prod-db"
+        env_file:
+            - ./chat-app-auth/.env.production.local
         environment:
             DATABASE_URL: postgres://chatapp:chatapp@chat-app-prod-db:5432/chatapp
         volumes:
