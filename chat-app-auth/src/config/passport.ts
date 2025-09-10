@@ -33,7 +33,7 @@ passport.use(new BearerStrategy(
             .where('token', token)
             .first()
             .then(function (user) {
-                if (!user) { return done('Invalid Token'); }
+                if (!user) { return done(null, false); }
                 return done(null, user);
             }).catch(function (err: Error) {
                 done(err);
