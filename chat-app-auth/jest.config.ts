@@ -8,13 +8,7 @@ const jestConfig: Config = {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   transform: {
-    '^.+\\.tsx?$': [
-      'ts-jest',
-      {
-        useESM: true,
-        tsconfig: 'tsconfig.test.json'
-      },
-    ],
+    '^.+\\.tsx?$': [ 'ts-jest', { useESM: true } ],
   },
   testMatch: [
     '**/src/__tests__/**/*.test.ts',
