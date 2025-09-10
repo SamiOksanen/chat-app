@@ -26,7 +26,7 @@ const jestConfig: Config = {
   forceExit: true, // Ensure Jest exits after tests complete
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/integration/setup.integration.ts'],
   // Load test environment variables
-  setupFiles: ['<rootDir>/jest.integration.setup.js']
+  setupFiles: ['<rootDir>/jest.integration.setup.ts']
 };
 
 export default jestConfig;

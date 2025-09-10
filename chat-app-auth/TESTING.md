@@ -188,7 +188,7 @@ Complete authentication testing requires:
 ### Unit Tests (No Docker Required)
 ```bash
 # Run only unit tests (fast, no Docker)
-npm run test:unit
+npm run test
 
 # Run unit tests in watch mode
 npm run test:watch
@@ -211,9 +211,6 @@ npm run test:integration:coverage
 
 ### All Tests
 ```bash
-# Run unit tests (includes Docker setup/cleanup for consistency)
-npm test
-
 # Run both unit and integration tests
 npm run test:all
 ```
