@@ -26,7 +26,8 @@ npm i
 ```
 
 ### Required environment variables
-- Add a `.env.development.local` and `.env.production.local` file at the `chat-app-front` and `chat-app-graphql-engine` directories of the repo, by copying the `.env.development.example` and `.env.production.example` file.
+- Add a `.env.development.local` and `.env.production.local` files at the `chat-app-front` and `chat-app-graphql-engine` directories of the repo, by copying the `.env.development.example` and `.env.production.example` files.
+- Add a `.env.development.local`, `.env.test.local` and `.env.production.local` files at the `chat-app-auth` directory of the repo, by copying the `.env.development.example`, `.env.test.example` and `.env.production.example` files.
 - Add a `.env.local` file at the `chat-app-db` directory of the repo, by copying the `.env.example` file.
 - Set values to the environment variables in the `.env` files.
 
