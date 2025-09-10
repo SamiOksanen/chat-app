@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { User } from '../db/schema.js';
-import { errorHandler } from '../db/errors.js';
 import type { UserData, UserInsert, LoginRequest, SignupRequest, HasuraWebhookResponse, ErrorResponse } from '../types/index.js';
 
 describe('Authentication System Functionality', () => {
@@ -30,12 +29,13 @@ describe('Authentication System Functionality', () => {
       const schema = User.jsonSchema;
       expect(schema.type).toBe('object');
       expect(schema.required).toEqual(['username', 'email']);
-      expect(schema.properties['username']).toEqual({
+      expect(schema.properties).toBeDefined();
+      expect(schema.properties!['username']).toEqual({
         type: 'string',
         minLength: 1,
         maxLength: 255
       });
-      expect(schema.properties['email']).toEqual({
+      expect(schema.properties!['email']).toEqual({
         type: 'string',
         minLength: 1,
         maxLength: 255

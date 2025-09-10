@@ -28,7 +28,8 @@ describe('User Model', () => {
       expect(schema.type).toBe('object');
       expect(schema.required).toContain('username');
       expect(schema.required).toContain('email');
-      expect(schema.properties['username']).toEqual({
+      expect(schema.properties).toBeDefined();
+      expect(schema.properties!['username']).toEqual({
         type: 'string',
         minLength: 1,
         maxLength: 255

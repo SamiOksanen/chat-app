@@ -1,9 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "strict": false,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,

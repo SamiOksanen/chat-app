@@ -21,7 +21,7 @@ describe('Passport Configuration Exists', () => {
 
   it('should validate local strategy logic patterns', () => {
     // Test the pattern used in local authentication
-    const simulateLocalAuth = (username: string, password: string, user: any) => {
+    const simulateLocalAuth = (_username: string, password: string, user: any) => {
       if (!user) return { success: false, message: 'User not found' };
       
       const passwordMatches = password === 'correct'; // Simplified for testing

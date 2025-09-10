@@ -113,7 +113,7 @@ describe('Error Handler Tests', () => {
     };
     const mockNext = jest.fn();
 
-    const errorMiddleware = (error: Error, req: any, res: any, next: any) => {
+    const errorMiddleware = (error: Error, _req: any, res: any, _next: any) => {
       const errorResponse: ErrorResponse = {
         message: error.message,
         type: error.constructor.name,
