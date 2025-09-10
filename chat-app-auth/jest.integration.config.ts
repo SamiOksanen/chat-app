@@ -11,12 +11,7 @@ const jestConfig: Config = {
     '^.+\\.tsx?$': [ 'ts-jest', { useESM: true } ],
   },
   testMatch: [
-    '**/src/__tests__/**/*.test.ts',
-    '**/src/**/*.test.ts'
-  ],
-  testPathIgnorePatterns: [
-    '/node_modules/',
-    '<rootDir>/src/__tests__/integration/'
+    '**/src/__tests__/integration/**/*.integration.test.ts'
   ],
   collectCoverageFrom: [
     'src/**/*.ts',
@@ -24,17 +19,14 @@ const jestConfig: Config = {
     '!src/__tests__/**/*',
     '!src/index.ts'
   ],
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
-  coverageDirectory: 'coverage',
+  coverageDirectory: 'coverage-integration',
   coverageReporters: ['text', 'lcov', 'html'],
-  coverageThreshold: {
-    global: {
-      branches: 20,
-      functions: 50,
-      lines: 30,
-      statements: 30
-    }
-  }
+  testTimeout: 30000, // Longer timeout for integration tests
+  maxWorkers: 1, // Run integration tests sequentially to avoid database conflicts
+  forceExit: true, // Ensure Jest exits after tests complete
+  setupFilesAfterEnv: ['<rootDir>/src/__tests__/integration/setup.integration.ts'],
+  // Load test environment variables
+  setupFiles: ['<rootDir>/jest.integration.setup.js']
 };
 
 export default jestConfig;
