@@ -21,7 +21,7 @@ jest.mock('../db/schema.js', () => ({
                         token: 'test-token',
                         verifyPassword: (
                             password: string,
-                            callback: Function
+                            callback: (err: any, result: boolean) => void
                         ) => {
                             callback(null, password === 'testpassword');
                         },

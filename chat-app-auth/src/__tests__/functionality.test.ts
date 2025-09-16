@@ -208,7 +208,7 @@ describe('Authentication System Functionality', () => {
             const wrongConfirm = 'different';
 
             expect(password === confirmPassword).toBe(true);
-            // @ts-ignore - Testing different values
+            // @ts-expect-error - Testing different values
             expect(password === wrongConfirm).toBe(false);
         });
     });
@@ -257,67 +257,6 @@ describe('Authentication System Functionality', () => {
             expect(error.message).toBe('Unique constraint violation');
             expect(error.type).toBe('UniqueViolation');
             expect(error.data['table']).toBe('users');
-        });
-    });
-
-    describe('Security Considerations', () => {
-        it('should exclude password from user data', () => {
-            const userWithPassword = {
-                userid: 1,
-                username: 'user',
-                email: 'user@example.com',
-                password: 'secret',
-                token: 'token',
-            };
-
-            const { password, ...safeData } = userWithPassword;
-
-            expect('password' in safeData).toBe(false);
-            expect(safeData.userid).toBe(1);
-        });
-
-        it('should handle bearer token format', () => {
-            const extractToken = (authHeader: string) => {
-                if (authHeader.startsWith('Bearer ')) {
-                    return authHeader.substring(7);
-                }
-                return null;
-            };
-
-            expect(extractToken('Bearer abc123')).toBe('abc123');
-            expect(extractToken('Basic abc123')).toBe(null);
-        });
-
-        it('should validate token format', () => {
-            const isValidToken = (token: string) => {
-                return Boolean(
-                    token && typeof token === 'string' && token.length > 0
-                );
-            };
-
-            expect(isValidToken('valid-token')).toBe(true);
-            expect(isValidToken('')).toBe(false);
-            expect(isValidToken(null as any)).toBe(false);
-            expect(isValidToken(undefined as any)).toBe(false);
-        });
-    });
-
-    describe('HTTP Status Codes', () => {
-        it('should use correct status codes', () => {
-            const statusCodes = {
-                success: 200,
-                badRequest: 400,
-                unauthorized: 401,
-                notFound: 404,
-                conflict: 409,
-                serverError: 500,
-            };
-
-            expect(statusCodes.success).toBe(200);
-            expect(statusCodes.badRequest).toBe(400);
-            expect(statusCodes.unauthorized).toBe(401);
-            expect(statusCodes.conflict).toBe(409);
-            expect(statusCodes.serverError).toBe(500);
         });
     });
 

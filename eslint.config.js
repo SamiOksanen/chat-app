@@ -57,12 +57,14 @@ export default [
             globals: {
                 ...globals.browser,
                 ...globals.jest,
+                ...globals.node,
                 vi: 'readonly',
                 describe: 'readonly',
                 test: 'readonly',
                 expect: 'readonly',
                 beforeEach: 'readonly',
                 afterEach: 'readonly',
+                global: 'readonly',
             },
         },
         plugins: {
@@ -173,10 +175,10 @@ export default [
     {
         ignores: [
             'node_modules/**',
-            'dist/**',
-            'build/**',
-            'coverage/**',
-            'coverage-integration/**',
+            '**/dist/**',
+            '**/build/**',
+            '**/coverage/**',
+            '**/coverage-integration/**',
             '**/*.d.ts',
         ],
     },

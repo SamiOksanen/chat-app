@@ -15,7 +15,7 @@ import type {
  * Sign in using username and password.
  */
 export const postLogin = async (
-    req: Request<{}, any, LoginRequest>,
+    req: Request<Record<string, never>, any, LoginRequest>,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
@@ -45,7 +45,7 @@ export const postLogin = async (
  * Create a new local account.
  */
 export const postSignup = async (
-    req: Request<{}, any, SignupRequest>,
+    req: Request<Record<string, never>, any, SignupRequest>,
     res: Response,
     next: NextFunction
 ): Promise<void> => {

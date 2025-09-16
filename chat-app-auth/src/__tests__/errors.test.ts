@@ -120,14 +120,8 @@ describe('Error Handler Tests', () => {
             status: jest.fn().mockReturnThis(),
             json: jest.fn(),
         };
-        const mockNext = jest.fn();
 
-        const errorMiddleware = (
-            error: Error,
-            _req: any,
-            res: any,
-            _next: any
-        ) => {
+        const errorMiddleware = (error: Error, _req: any, res: any) => {
             const errorResponse: ErrorResponse = {
                 message: error.message,
                 type: error.constructor.name,
@@ -136,7 +130,7 @@ describe('Error Handler Tests', () => {
             res.status(500).json(errorResponse);
         };
 
-        errorMiddleware(mockError, mockReq, mockRes, mockNext);
+        errorMiddleware(mockError, mockReq, mockRes);
 
         expect(mockRes.status).toHaveBeenCalledWith(500);
         expect(mockRes.json).toHaveBeenCalledWith({
