@@ -1,7 +1,19 @@
 import request from 'supertest';
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from '@jest/globals';
+import {
+    describe,
+    it,
+    expect,
+    beforeAll,
+    afterAll,
+    beforeEach,
+} from '@jest/globals';
 import app from '../../index.js';
-import { setupTestDatabase, teardownTestDatabase, cleanTestDatabase, createTestUser } from './setup.integration.js';
+import {
+    setupTestDatabase,
+    teardownTestDatabase,
+    cleanTestDatabase,
+    createTestUser,
+} from './setup.integration.js';
 
 describe('Authentication Endpoints Integration Tests', () => {
     beforeAll(async () => {
@@ -22,7 +34,7 @@ describe('Authentication Endpoints Integration Tests', () => {
                 username: 'testuser',
                 email: 'test@example.com',
                 password: 'password123',
-                confirmPassword: 'password123'
+                confirmPassword: 'password123',
             };
 
             const response = await request(app)
@@ -43,7 +55,7 @@ describe('Authentication Endpoints Integration Tests', () => {
                 username: 'testuser',
                 email: 'invalid-email',
                 password: 'password123',
-                confirmPassword: 'password123'
+                confirmPassword: 'password123',
             };
 
             const response = await request(app)
@@ -60,7 +72,7 @@ describe('Authentication Endpoints Integration Tests', () => {
                 username: 'testuser',
                 email: 'test@example.com',
                 password: '123',
-                confirmPassword: '123'
+                confirmPassword: '123',
             };
 
             const response = await request(app)
@@ -77,7 +89,7 @@ describe('Authentication Endpoints Integration Tests', () => {
                 username: 'testuser',
                 email: 'test@example.com',
                 password: 'password123',
-                confirmPassword: 'different123'
+                confirmPassword: 'different123',
             };
 
             const response = await request(app)
@@ -94,14 +106,14 @@ describe('Authentication Endpoints Integration Tests', () => {
             await createTestUser({
                 username: 'testuser',
                 email: 'first@example.com',
-                password: 'password123'
+                password: 'password123',
             });
 
             const userData = {
                 username: 'testuser',
                 email: 'second@example.com',
                 password: 'password123',
-                confirmPassword: 'password123'
+                confirmPassword: 'password123',
             };
 
             const response = await request(app)
@@ -120,14 +132,14 @@ describe('Authentication Endpoints Integration Tests', () => {
             await createTestUser({
                 username: 'loginuser',
                 email: 'login@example.com',
-                password: 'password123'
+                password: 'password123',
             });
         });
 
         it('should login successfully with valid credentials', async () => {
             const loginData = {
                 username: 'loginuser',
-                password: 'password123'
+                password: 'password123',
             };
 
             const response = await request(app)
@@ -146,7 +158,7 @@ describe('Authentication Endpoints Integration Tests', () => {
         it('should reject login with invalid username', async () => {
             const loginData = {
                 username: 'nonexistent',
-                password: 'password123'
+                password: 'password123',
             };
 
             const response = await request(app)
@@ -161,7 +173,7 @@ describe('Authentication Endpoints Integration Tests', () => {
         it('should reject login with invalid password', async () => {
             const loginData = {
                 username: 'loginuser',
-                password: 'wrongpassword'
+                password: 'wrongpassword',
             };
 
             const response = await request(app)
@@ -175,7 +187,7 @@ describe('Authentication Endpoints Integration Tests', () => {
 
         it('should reject login with missing username', async () => {
             const loginData = {
-                password: 'password123'
+                password: 'password123',
             };
 
             const response = await request(app)
@@ -189,7 +201,7 @@ describe('Authentication Endpoints Integration Tests', () => {
 
         it('should reject login with missing password', async () => {
             const loginData = {
-                username: 'loginuser'
+                username: 'loginuser',
             };
 
             const response = await request(app)
@@ -210,7 +222,7 @@ describe('Authentication Endpoints Integration Tests', () => {
             const user = await createTestUser({
                 username: 'webhookuser',
                 email: 'webhook@example.com',
-                password: 'password123'
+                password: 'password123',
             });
             userToken = user.token;
         });

@@ -5,10 +5,12 @@ import { User } from '../../db/schema.js';
 // Test database configuration
 const testDatabaseConfig: Knex.Config = {
     client: 'pg',
-    connection: process.env['DATABASE_URL'] || 'postgres://chatapp_test:chatapp_test@localhost:5434/chatapp_test',
+    connection:
+        process.env['DATABASE_URL'] ||
+        'postgres://chatapp_test:chatapp_test@localhost:5434/chatapp_test',
     migrations: {
-        directory: './db/migrations'
-    }
+        directory: './db/migrations',
+    },
 };
 
 let testKnex: Knex;
@@ -16,7 +18,7 @@ let testKnex: Knex;
 export const setupTestDatabase = async (): Promise<void> => {
     testKnex = knex(testDatabaseConfig);
     Model.knex(testKnex);
-    
+
     // Create tables for testing
     await createTestTables();
 };
@@ -40,7 +42,7 @@ export const cleanTestDatabase = async (): Promise<void> => {
 const createTestTables = async (): Promise<void> => {
     // Check if tables exist, if not create them
     const hasUsersTable = await testKnex.schema.hasTable('users');
-    
+
     if (!hasUsersTable) {
         await testKnex.raw(`
             CREATE TABLE users(
@@ -56,8 +58,9 @@ const createTestTables = async (): Promise<void> => {
         `);
     }
 
-    const hasConversationsTable = await testKnex.schema.hasTable('conversations');
-    
+    const hasConversationsTable =
+        await testKnex.schema.hasTable('conversations');
+
     if (!hasConversationsTable) {
         await testKnex.raw(`
             CREATE TABLE conversations(
@@ -72,8 +75,9 @@ const createTestTables = async (): Promise<void> => {
         `);
     }
 
-    const hasConversationUsersTable = await testKnex.schema.hasTable('conversationusers');
-    
+    const hasConversationUsersTable =
+        await testKnex.schema.hasTable('conversationusers');
+
     if (!hasConversationUsersTable) {
         await testKnex.raw(`
             CREATE TABLE conversationusers(
@@ -88,7 +92,7 @@ const createTestTables = async (): Promise<void> => {
     }
 
     const hasMessagesTable = await testKnex.schema.hasTable('messages');
-    
+
     if (!hasMessagesTable) {
         await testKnex.raw(`
             CREATE TABLE messages(
@@ -101,7 +105,7 @@ const createTestTables = async (): Promise<void> => {
                 FOREIGN KEY (userid) REFERENCES users (userid)
             );
         `);
-        
+
         await testKnex.raw(`
             CREATE INDEX idx_messages_conversations
             ON messages (conversationid);

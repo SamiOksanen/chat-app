@@ -32,11 +32,13 @@ if (!sessionSecret) {
 app.set('port', port);
 app.set('json spaces', 2); // number of spaces for indentation
 app.use(bodyParser.json());
-app.use(session({
-    secret: sessionSecret, 
-    resave: true, 
-    saveUninitialized: true
-}));
+app.use(
+    session({
+        secret: sessionSecret,
+        resave: true,
+        saveUninitialized: true,
+    })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors());

@@ -8,8 +8,10 @@
     "start": "vite --port 3000 --host",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint \"./**/*.{ts,tsx}\" --ignore-pattern node_modules/",
-    "format": "prettier --write \"./**/*.{ts,tsx,css}\"",
+    "lint": "cd .. && eslint \"chat-app-front/src/**/*.{ts,tsx}\"",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage"
