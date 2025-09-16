@@ -85,7 +85,7 @@ describe('Integration Tests - Controller Functions', () => {
 
         try {
             await postLogin(mockReq, mockRes, mockNext);
-        } catch (error) {
+        } catch {
             // Expected due to mocking limitations, but function was called
         }
 
@@ -104,7 +104,7 @@ describe('Integration Tests - Controller Functions', () => {
 
         try {
             await postSignup(mockReq, mockRes, mockNext);
-        } catch (error) {
+        } catch {
             // Expected due to mocking limitations, but function was called
         }
 
@@ -120,7 +120,7 @@ describe('Integration Tests - Controller Functions', () => {
 
         try {
             await getWebhook(mockReq, mockRes, mockNext);
-        } catch (error) {
+        } catch {
             // Expected due to mocking limitations, but function was called
         }
 
@@ -134,7 +134,7 @@ describe('Integration Tests - Controller Functions', () => {
 
         try {
             errorHandler(mockError, mockRes);
-        } catch (error) {
+        } catch {
             // Expected due to mocking limitations, but function was called
         }
 
@@ -145,7 +145,7 @@ describe('Integration Tests - Controller Functions', () => {
         try {
             // Import passport config to execute the configuration code
             await import('../config/passport.js');
-        } catch (error) {
+        } catch {
             // Expected due to mocking limitations, but code was executed
         }
 
