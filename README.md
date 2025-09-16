@@ -7,6 +7,8 @@
 ![image](https://img.shields.io/badge/Ant%20Design-1890FF?style=for-the-badge&logo=antdesign&logoColor=white)
 ![image](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 ![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![image](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![image](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)
 
 Application for having conversations with other users individually and in groups. Uses React and Ant Design for the user interface, Postgres as the database, Node.js Passport for authentication and Hasura GraphQL engine for connecting everything together. Database migrations are handled with Hasura migrations. This is a hobby project I have used for trying out things like Hasura, Ant Design and developing with Claude Code. **This project is not meant for any real production use.**
 
@@ -19,10 +21,17 @@ Application for having conversations with other users individually and in groups
 - Docker
 - Hasura CLI
 
-### Install dependencies in `chat-app-auth` and `chat-app-front` directories
+### Install dependencies
 ```bash
-cd <dir>
-npm i
+# Install root dependencies (ESLint, Prettier, shared tooling)
+npm install
+
+# Install service-specific dependencies
+cd chat-app-auth
+npm install
+
+cd ../chat-app-front
+npm install
 ```
 
 ### Required environment variables
@@ -30,6 +39,43 @@ npm i
 - Add a `.env.development.local`, `.env.test.local` and `.env.production.local` files at the `chat-app-auth` directory of the repo, by copying the `.env.development.example`, `.env.test.example` and `.env.production.example` files.
 - Add a `.env.local` file at the `chat-app-db` directory of the repo, by copying the `.env.example` file.
 - Set values to the environment variables in the `.env` files.
+
+## Code Quality & Development 🔧
+
+### Unified Linting & Formatting
+The project uses centralized ESLint and Prettier configurations for consistent code quality across all services.
+
+```bash
+# Run from project root (applies to all services)
+npm run lint         # Check code quality with ESLint
+npm run lint:fix     # Fix ESLint issues automatically
+npm run format       # Format all files with Prettier
+npm run format:check # Check formatting without changes
+
+# Service-specific commands (uses shared config)
+cd chat-app-front
+npm run lint         # Frontend linting only
+npm run format       # Frontend formatting only
+
+cd chat-app-auth  
+npm run lint         # Backend linting only
+npm run format       # Backend formatting only
+```
+
+### Development Commands
+```bash
+# Frontend development
+cd chat-app-front
+npm start            # Development server (port 3000)
+npm run build        # Production build
+npm test             # Run tests with Vitest
+
+# Backend development  
+cd chat-app-auth
+npm run dev:watch    # Development with auto-reload
+npm run build        # TypeScript compilation
+npm start            # Run built application
+```
 
 ## Run the app in development mode
 ```bash
