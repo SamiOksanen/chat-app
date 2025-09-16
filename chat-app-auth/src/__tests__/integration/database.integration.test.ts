@@ -1,6 +1,18 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from '@jest/globals';
+import {
+    describe,
+    it,
+    expect,
+    beforeAll,
+    afterAll,
+    beforeEach,
+} from '@jest/globals';
 import { User } from '../../db/schema.js';
-import { setupTestDatabase, teardownTestDatabase, cleanTestDatabase, getTestKnex } from './setup.integration.js';
+import {
+    setupTestDatabase,
+    teardownTestDatabase,
+    cleanTestDatabase,
+    getTestKnex,
+} from './setup.integration.js';
 
 describe('Database Integration Tests', () => {
     beforeAll(async () => {
@@ -20,7 +32,7 @@ describe('Database Integration Tests', () => {
             const userData = {
                 username: 'testuser',
                 email: 'test@example.com',
-                password: 'plainpassword'
+                password: 'plainpassword',
             };
 
             const user = await User.query().insert(userData);
@@ -37,7 +49,7 @@ describe('Database Integration Tests', () => {
             const userData = {
                 username: 'testuser',
                 email: 'test@example.com',
-                password: 'plainpassword'
+                password: 'plainpassword',
             };
 
             const user = await User.query().insert(userData);
@@ -58,7 +70,7 @@ describe('Database Integration Tests', () => {
             const userData = {
                 username: 'testuser',
                 email: 'test@example.com',
-                password: 'plainpassword'
+                password: 'plainpassword',
             };
 
             const user = await User.query().insert(userData);
@@ -79,7 +91,7 @@ describe('Database Integration Tests', () => {
             const userData = {
                 username: 'testuser',
                 email: 'test@example.com',
-                password: 'plainpassword'
+                password: 'plainpassword',
             };
 
             const user = await User.query().insert(userData);
@@ -96,13 +108,13 @@ describe('Database Integration Tests', () => {
             const userData1 = {
                 username: 'testuser',
                 email: 'test1@example.com',
-                password: 'password1'
+                password: 'password1',
             };
 
             const userData2 = {
                 username: 'testuser',
                 email: 'test2@example.com',
-                password: 'password2'
+                password: 'password2',
             };
 
             await User.query().insert(userData1);
@@ -114,13 +126,13 @@ describe('Database Integration Tests', () => {
             const userData1 = {
                 username: 'testuser1',
                 email: 'test@example.com',
-                password: 'password1'
+                password: 'password1',
             };
 
             const userData2 = {
                 username: 'testuser2',
                 email: 'test@example.com',
-                password: 'password2'
+                password: 'password2',
             };
 
             await User.query().insert(userData1);
@@ -130,12 +142,12 @@ describe('Database Integration Tests', () => {
 
         it('should enforce unique token constraint', async () => {
             const knex = getTestKnex();
-            
+
             // Create first user normally
             const user1 = await User.query().insert({
                 username: 'testuser1',
                 email: 'test1@example.com',
-                password: 'password1'
+                password: 'password1',
             });
 
             // Try to create another user with the same token (this would be an artificial scenario)
@@ -145,7 +157,7 @@ describe('Database Integration Tests', () => {
                     username: 'testuser2',
                     email: 'test2@example.com',
                     password: 'hashedpassword',
-                    token: user1.token
+                    token: user1.token,
                 })
             ).rejects.toThrow();
         });
@@ -154,7 +166,7 @@ describe('Database Integration Tests', () => {
             const userData = {
                 username: 'testuser',
                 email: 'test@example.com',
-                password: 'plainpassword'
+                password: 'plainpassword',
             };
 
             const createdUser = await User.query().insert(userData);
@@ -182,7 +194,7 @@ describe('Database Integration Tests', () => {
             const userData = {
                 username: 'testuser',
                 email: 'test@example.com',
-                password: 'plainpassword'
+                password: 'plainpassword',
             };
 
             const createdUser = await User.query().insert(userData);

@@ -1,8 +1,5 @@
 import { Response } from 'express';
-import {
-    ValidationError,
-    NotFoundError
-} from 'objection';
+import { ValidationError, NotFoundError } from 'objection';
 
 import objectionDbErrors from 'objection-db-errors';
 
@@ -12,7 +9,7 @@ const {
     NotNullViolationError,
     ForeignKeyViolationError,
     CheckViolationError,
-    DataError
+    DataError,
 } = objectionDbErrors;
 
 import type { ErrorResponse } from '../types/index.js';
@@ -24,35 +21,35 @@ export function errorHandler(err: Error, res: Response): void {
                 res.status(400).send({
                     message: err.message,
                     type: 'ModelValidation',
-                    data: err.data
+                    data: err.data,
                 } satisfies ErrorResponse);
                 break;
             case 'RelationExpression':
                 res.status(400).send({
                     message: err.message,
                     type: 'InvalidRelationExpression',
-                    data: {}
+                    data: {},
                 } satisfies ErrorResponse);
                 break;
             case 'UnallowedRelation':
                 res.status(400).send({
                     message: err.message,
                     type: 'UnallowedRelation',
-                    data: {}
+                    data: {},
                 } satisfies ErrorResponse);
                 break;
             case 'InvalidGraph':
                 res.status(400).send({
                     message: err.message,
                     type: 'InvalidGraph',
-                    data: {}
+                    data: {},
                 } satisfies ErrorResponse);
                 break;
             default:
                 res.status(400).send({
                     message: err.message,
                     type: 'UnknownValidationError',
-                    data: {}
+                    data: {},
                 } satisfies ErrorResponse);
                 break;
         }
@@ -60,7 +57,7 @@ export function errorHandler(err: Error, res: Response): void {
         res.status(404).send({
             message: err.message,
             type: 'NotFound',
-            data: {}
+            data: {},
         } satisfies ErrorResponse);
     } else if (err instanceof UniqueViolationError) {
         res.status(409).send({
@@ -69,8 +66,8 @@ export function errorHandler(err: Error, res: Response): void {
             data: {
                 columns: err.columns,
                 table: err.table,
-                constraint: err.constraint
-            }
+                constraint: err.constraint,
+            },
         } satisfies ErrorResponse);
     } else if (err instanceof NotNullViolationError) {
         res.status(400).send({
@@ -79,7 +76,7 @@ export function errorHandler(err: Error, res: Response): void {
             data: {
                 column: err.column,
                 table: err.table,
-            }
+            },
         } satisfies ErrorResponse);
     } else if (err instanceof ForeignKeyViolationError) {
         res.status(409).send({
@@ -87,8 +84,8 @@ export function errorHandler(err: Error, res: Response): void {
             type: 'ForeignKeyViolation',
             data: {
                 table: err.table,
-                constraint: err.constraint
-            }
+                constraint: err.constraint,
+            },
         } satisfies ErrorResponse);
     } else if (err instanceof CheckViolationError) {
         res.status(400).send({
@@ -96,26 +93,26 @@ export function errorHandler(err: Error, res: Response): void {
             type: 'CheckViolation',
             data: {
                 table: err.table,
-                constraint: err.constraint
-            }
+                constraint: err.constraint,
+            },
         } satisfies ErrorResponse);
     } else if (err instanceof DataError) {
         res.status(400).send({
             message: err.message,
             type: 'InvalidData',
-            data: {}
+            data: {},
         } satisfies ErrorResponse);
     } else if (err instanceof DBError) {
         res.status(500).send({
             message: err.message,
             type: 'UnknownDatabaseError',
-            data: {}
+            data: {},
         } satisfies ErrorResponse);
     } else {
         res.status(500).send({
             message: err.message,
             type: 'UnknownError',
-            data: {}
+            data: {},
         } satisfies ErrorResponse);
     }
 }

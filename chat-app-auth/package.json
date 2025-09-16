@@ -9,6 +9,10 @@
     "start": "node dist/src/index.js",
     "dev": "tsx src/index.ts",
     "dev:watch": "nodemon --exec tsx src/index.ts",
+    "lint": "cd .. && eslint \"chat-app-auth/src/**/*.{ts,js}\"",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write \"src/**/*.{ts,js}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js}\"",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "npm run test -- --coverage",
@@ -17,7 +21,7 @@
     "test:integration:coverage": "npm run test:integration:setup && node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.integration.config.ts --coverage; EXIT_CODE=$?; npm run test:integration:cleanup; exit $EXIT_CODE",
     "test:integration:setup": "docker-compose -f docker-compose.test.yaml up -d chat-app-db-test chat-app-graphql-engine-test && sleep 10",
     "test:integration:cleanup": "docker-compose -f docker-compose.test.yaml down",
-    "test:all": "npm run test:unit && npm run test:integration"
+    "test:all": "npm run test && npm run test:integration"
   },
   "author": "Sami Oksanen",
   "license": "MIT",

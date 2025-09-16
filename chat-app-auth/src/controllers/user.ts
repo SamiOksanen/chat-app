@@ -3,26 +3,35 @@ import { body, validationResult } from 'express-validator';
 import passport from '../config/passport.js';
 import { User } from '../db/schema.js';
 import { errorHandler } from '../db/errors.js';
-import type { LoginRequest, SignupRequest, HasuraWebhookResponse, UserInsert } from '../types/index.js';
+import type {
+    LoginRequest,
+    SignupRequest,
+    HasuraWebhookResponse,
+    UserInsert,
+} from '../types/index.js';
 
 /**
  * POST /login
  * Sign in using username and password.
  */
-export const postLogin = async (req: Request<{}, any, LoginRequest>, res: Response, next: NextFunction): Promise<void> => {
+export const postLogin = async (
+    req: Request<Record<string, never>, any, LoginRequest>,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     await body('username', 'Username is not valid').notEmpty().run(req);
     await body('password', 'Password cannot be blank').notEmpty().run(req);
 
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        res.status(400).json({ 'errors': errors });
+        res.status(400).json({ errors: errors });
         return;
     }
 
     passport.authenticate('local', (err: any, user: any) => {
-        if (err) { 
-            handleResponse(res, 400, { 'error': err });
+        if (err) {
+            handleResponse(res, 400, { error: err });
             return;
         }
         if (user) {
@@ -35,10 +44,18 @@ export const postLogin = async (req: Request<{}, any, LoginRequest>, res: Respon
  * POST /signup
  * Create a new local account.
  */
-export const postSignup = async (req: Request<{}, any, SignupRequest>, res: Response, next: NextFunction): Promise<void> => {
+export const postSignup = async (
+    req: Request<Record<string, never>, any, SignupRequest>,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     await body('username', 'Username is not valid').notEmpty().run(req);
-    await body('password', 'Password must be at least 8 characters long').isLength({ min: 8 }).run(req);
-    await body('confirmPassword', 'Passwords do not match').equals(req.body.password).run(req);
+    await body('password', 'Password must be at least 8 characters long')
+        .isLength({ min: 8 })
+        .run(req);
+    await body('confirmPassword', 'Passwords do not match')
+        .equals(req.body.password)
+        .run(req);
     await body('email', 'Email is not valid').isEmail().run(req);
 
     const errors = validationResult(req);
@@ -46,10 +63,10 @@ export const postSignup = async (req: Request<{}, any, SignupRequest>, res: Resp
     if (!errors.isEmpty()) {
         console.info(
             `validation results: ${JSON.stringify(
-                errors,
-            )}, is empty? ${errors.isEmpty()}`,
+                errors
+            )}, is empty? ${errors.isEmpty()}`
         );
-        res.status(400).json({ 'errors': errors });
+        res.status(400).json({ errors: errors });
         return;
     }
 
@@ -59,7 +76,7 @@ export const postSignup = async (req: Request<{}, any, SignupRequest>, res: Resp
             password: req.body.password,
             email: req.body.email,
         };
-        
+
         await User.query().insert(userInsert);
     } catch (err) {
         if (err instanceof Error) {
@@ -69,10 +86,10 @@ export const postSignup = async (req: Request<{}, any, SignupRequest>, res: Resp
         }
         return;
     }
-    
+
     passport.authenticate('local', (err: any, user: any) => {
-        if (err) { 
-            handleResponse(res, 400, { 'error': err });
+        if (err) {
+            handleResponse(res, 400, { error: err });
             return;
         }
         if (user) {
@@ -81,21 +98,25 @@ export const postSignup = async (req: Request<{}, any, SignupRequest>, res: Resp
     })(req, res, next);
 };
 
-export const getWebhook = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const getWebhook = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
     passport.authenticate('bearer', (err: any, user: any) => {
-        if (err) { 
-            handleResponse(res, 401, { 'error': err });
+        if (err) {
+            handleResponse(res, 401, { error: err });
             return;
         }
         if (user) {
             const response: HasuraWebhookResponse = {
                 'X-Hasura-Role': 'user',
-                'X-Hasura-User-Id': `${user.userid}`
+                'X-Hasura-User-Id': `${user.userid}`,
             };
             handleResponse(res, 200, response);
         } else {
-            const response: HasuraWebhookResponse = { 
-                'X-Hasura-Role': 'anonymous' 
+            const response: HasuraWebhookResponse = {
+                'X-Hasura-Role': 'anonymous',
             };
             handleResponse(res, 200, response);
         }

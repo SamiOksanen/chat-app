@@ -22,6 +22,10 @@ cd chat-app-auth
 npm run dev:watch    # Development with auto-reload
 npm run build        # TypeScript compilation
 npm start            # Run built application
+npm run lint         # ESLint
+npm run lint:fix     # ESLint with auto-fix
+npm run format       # Prettier formatting
+npm run format:check # Check formatting
 ```
 
 ### Frontend (chat-app-front)
@@ -30,10 +34,25 @@ cd chat-app-front
 npm start            # Development server on port 3000
 npm run build        # Production build
 npm run lint         # ESLint
+npm run lint:fix     # ESLint with auto-fix
 npm run format       # Prettier formatting
+npm run format:check # Check formatting
 npm test             # Vitest tests
 npm run test:ui      # Vitest UI
 npm run test:coverage # Test coverage
+```
+
+### Code Quality & Formatting (Unified)
+```bash
+# Run from project root - applies to all services
+npm run lint         # ESLint all TypeScript/JavaScript files
+npm run lint:fix     # ESLint with auto-fix
+npm run format       # Format all source files with Prettier
+npm run format:check # Check formatting without changes
+
+# Service-specific linting (uses shared config)
+cd chat-app-front && npm run lint    # Frontend only
+cd chat-app-auth && npm run lint     # Backend only
 ```
 
 ### Full Stack Development
@@ -109,7 +128,11 @@ Production equivalents use `.env.production.local` files.
 ## Development Notes
 - Both frontend and backend use ES modules (`"type": "module"`)
 - TypeScript strict mode enabled
-- Linting and formatting configured (ESLint + Prettier)
+- **Unified ESLint + Prettier configuration** managed from project root
+  - Shared `eslint.config.js` with service-specific rules
+  - Shared `.prettierrc.json` for consistent formatting
+  - Dependencies centralized in root `package.json`
+  - Service configs inherit from root automatically
 - Database migrations managed through Hasura CLI
 - Real-time features implemented via GraphQL subscriptions
 
