@@ -22,16 +22,9 @@ Application for having conversations with other users individually and in groups
 - Hasura CLI
 
 ### Install dependencies
+Install root dependencies (ESLint, Prettier, shared tooling) and service-specific dependencies
 ```bash
-# Install root dependencies (ESLint, Prettier, shared tooling)
-npm install
-
-# Install service-specific dependencies
-cd chat-app-auth
-npm install
-
-cd ../chat-app-front
-npm install
+npm i
 ```
 
 ### Required environment variables
@@ -60,21 +53,6 @@ npm run format       # Frontend formatting only
 cd chat-app-auth  
 npm run lint         # Backend linting only
 npm run format       # Backend formatting only
-```
-
-### Development Commands
-```bash
-# Frontend development
-cd chat-app-front
-npm start            # Development server (port 3000)
-npm run build        # Production build
-npm test             # Run tests with Vitest
-
-# Backend development  
-cd chat-app-auth
-npm run dev:watch    # Development with auto-reload
-npm run build        # TypeScript compilation
-npm start            # Run built application
 ```
 
 ## Run the app in development mode

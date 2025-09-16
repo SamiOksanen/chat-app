@@ -5,6 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "(cd chat-app-auth && npm i) && (cd chat-app-front && npm i)",
     "lint": "eslint \"**/src/**/*.{ts,tsx,js}\" --ignore-pattern node_modules/",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"**/src/**/*.{ts,tsx,js,css}\"",
