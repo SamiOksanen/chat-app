@@ -2,11 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Conversations', () => {
     test.beforeEach(async ({ page }) => {
-        // Login before each test
+        // Navigate to the app - user is pre-authenticated
         await page.goto('/');
-        await page.fill('input[type="text"]', 'testuser1');
-        await page.fill('input[type="password"]', 'testpassword');
-        await page.click('button[type="submit"]');
         await page.waitForURL(/\/chat/, { timeout: 10000 });
     });
 

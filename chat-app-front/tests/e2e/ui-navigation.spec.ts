@@ -2,11 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('UI Navigation', () => {
     test.beforeEach(async ({ page }) => {
-        // Login before each test
+        // Navigate to the app - user is pre-authenticated
         await page.goto('/');
-        await page.fill('input[type="text"]', 'testuser1');
-        await page.fill('input[type="password"]', 'testpassword');
-        await page.click('button[type="submit"]');
         await page.waitForURL(/\/chat/, { timeout: 10000 });
     });
 
@@ -92,16 +89,6 @@ test.describe('UI Navigation', () => {
                 page.locator('[data-testid="messages-container"]')
             ).toBeVisible();
         }
-    });
-
-    test('should display user profile information', async ({ page }) => {
-        // Should show logged in user info
-        await expect(
-            page.locator('[data-testid="user-profile"]')
-        ).toBeVisible();
-        await expect(
-            page.locator('[data-testid="username-display"]')
-        ).toContainText('testuser1');
     });
 
     test('should handle theme switching', async ({ page }) => {

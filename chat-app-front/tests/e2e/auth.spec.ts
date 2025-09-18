@@ -1,73 +1,42 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Authentication', () => {
+// Tests that run with pre-authenticated state
+// For login/logout flows, see auth-flows.spec.ts
+test.describe('Authenticated User State', () => {
     test.beforeEach(async ({ page }) => {
+        // Navigate to the app - user should already be authenticated
         await page.goto('/');
-    });
-
-    test('should show login form when not authenticated', async ({ page }) => {
-        // Check for login form elements
-        await expect(page.locator('input[type="text"]')).toBeVisible();
-        await expect(page.locator('input[type="password"]')).toBeVisible();
-        await expect(page.locator('button[type="submit"]')).toBeVisible();
-    });
-
-    test('should login with valid credentials', async ({ page }) => {
-        // Use test data from seeds
-        await page.fill('input[type="text"]', 'testuser1');
-        await page.fill('input[type="password"]', 'testpassword');
-
-        await page.click('button[type="submit"]');
-
-        // Wait for redirect to main app
+        // Should automatically redirect to chat since we're authenticated
         await page.waitForURL(/\/chat/, { timeout: 10000 });
+    });
 
+    test('should be logged in and show chat interface', async ({ page }) => {
         // Check that we're logged in (should see chat interface)
         await expect(
             page.locator('[data-testid="chat-container"]')
         ).toBeVisible({ timeout: 5000 });
     });
 
-    test('should show error with invalid credentials', async ({ page }) => {
-        await page.fill('input[type="text"]', 'invaliduser');
-        await page.fill('input[type="password"]', 'invalidpassword');
-
-        await page.click('button[type="submit"]');
-
-        // Should show error message
-        await expect(page.locator('.ant-message-error')).toBeVisible({
-            timeout: 5000,
-        });
+    test('should show user profile information when authenticated', async ({
+        page,
+    }) => {
+        // Should show logged in user info
+        await expect(
+            page.locator('[data-testid="user-profile"]')
+        ).toBeVisible();
+        await expect(
+            page.locator('[data-testid="username-display"]')
+        ).toContainText('testuser1');
     });
 
-    test('should logout successfully', async ({ page }) => {
-        // Login first
-        await page.fill('input[type="text"]', 'testuser1');
-        await page.fill('input[type="password"]', 'testpassword');
-        await page.click('button[type="submit"]');
-
-        await page.waitForURL(/\/chat/, { timeout: 10000 });
-
-        // Find and click logout button
-        await page.click('[data-testid="logout-button"]');
-
-        // Should redirect to login page
-        await page.waitForURL(/\/login/, { timeout: 5000 });
-        await expect(page.locator('input[type="text"]')).toBeVisible();
-    });
-
-    test('should maintain session on page refresh', async ({ page }) => {
-        // Login first
-        await page.fill('input[type="text"]', 'testuser1');
-        await page.fill('input[type="password"]', 'testpassword');
-        await page.click('button[type="submit"]');
-
-        await page.waitForURL(/\/chat/, { timeout: 10000 });
-
+    test('should maintain authentication across page reloads', async ({
+        page,
+    }) => {
         // Refresh the page
         await page.reload();
 
-        // Should still be logged in
+        // Should still be logged in and redirect to chat
+        await page.waitForURL(/\/chat/, { timeout: 10000 });
         await expect(
             page.locator('[data-testid="chat-container"]')
         ).toBeVisible({ timeout: 5000 });
