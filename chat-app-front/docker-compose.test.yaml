@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 services:
     chat-app-db-test:
         image: postgres:17
@@ -11,7 +11,7 @@ services:
             - chat-app-db-test-data:/var/lib/postgresql/data
             - ../chat-app-graphql-engine/seeds:/docker-entrypoint-initdb.d
         ports:
-            - "5434:5432"
+            - '5434:5432'
         networks:
             - chat-app-test-net
     chat-app-auth-test:
@@ -19,7 +19,7 @@ services:
             context: ../chat-app-auth
         restart: unless-stopped
         depends_on:
-            - "chat-app-db-test"
+            - 'chat-app-db-test'
         environment:
             DATABASE_URL: postgres://chatapp_test:chatapp_test@chat-app-db-test:5432/chatapp_test
             SESSION_SECRET: test-secret-for-e2e-tests
@@ -29,18 +29,18 @@ services:
             - ../chat-app-auth:/usr/src/app
             - /usr/src/app/node_modules
         ports:
-            - "8086:8084"
+            - '8086:8084'
         networks:
             - chat-app-test-net
     chat-app-graphql-engine-test:
         image: hasura/graphql-engine:v2.48.4-ce.cli-migrations-v3
         depends_on:
-            - "chat-app-db-test"
-            - "chat-app-auth-test"
+            - 'chat-app-db-test'
+            - 'chat-app-auth-test'
         restart: unless-stopped
         environment:
             HASURA_GRAPHQL_DATABASE_URL: postgres://chatapp_test:chatapp_test@chat-app-db-test:5432/chatapp_test
-            HASURA_GRAPHQL_ENABLE_CONSOLE: "false"
+            HASURA_GRAPHQL_ENABLE_CONSOLE: 'false'
             HASURA_GRAPHQL_ADMIN_SECRET: test-admin-secret-e2e
             HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
             HASURA_GRAPHQL_AUTH_HOOK: http://chat-app-auth-test:8084/auth/webhook
@@ -48,7 +48,7 @@ services:
             - ../chat-app-graphql-engine/migrations:/hasura-migrations
             - ../chat-app-graphql-engine/metadata:/hasura-metadata
         ports:
-            - "8082:8080"
+            - '8082:8080'
         networks:
             - chat-app-test-net
     chat-app-front-test:
@@ -56,14 +56,14 @@ services:
             context: .
         restart: unless-stopped
         depends_on:
-            - "chat-app-graphql-engine-test"
+            - 'chat-app-graphql-engine-test'
         env_file:
             - ./.env.test.local
         volumes:
             - .:/usr/src/app
             - /usr/src/app/node_modules
         ports:
-            - "82:3000"
+            - '82:3000'
         networks:
             - chat-app-test-net
 
