@@ -20,7 +20,11 @@ pids
 lib-cov
 
 # Tests
-/coverage
+coverage
+coverage-integration
+test-results
+playwright-report
+.auth
 .nyc_output
 *.lcov
 
