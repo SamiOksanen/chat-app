@@ -14,7 +14,13 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
     "test": "vitest run",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:setup": "docker-compose -f docker-compose.test.yaml up -d --build",
+    "test:teardown": "docker-compose -f docker-compose.test.yaml down -v"
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.1",
@@ -26,6 +32,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.4.3",
