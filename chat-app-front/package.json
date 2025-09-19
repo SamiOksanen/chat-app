@@ -20,7 +20,8 @@
         "test:e2e:headed": "playwright test --headed",
         "test:e2e:debug": "playwright test --debug",
         "test:e2e:setup": "docker-compose -f docker-compose.test.yaml up -d --build",
-        "test:e2e:cleanup": "docker-compose -f docker-compose.test.yaml down -v"
+        "test:e2e:cleanup": "docker-compose -f docker-compose.test.yaml down -v",
+        "test:e2e:complete": "npm run test:e2e:setup && npm run test:e2e; EXIT_CODE=$?; npm run test:e2e:cleanup; exit $EXIT_CODE"
     },
     "dependencies": {
         "@ant-design/icons": "^6.0.1",

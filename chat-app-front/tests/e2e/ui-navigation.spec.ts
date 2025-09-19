@@ -4,7 +4,7 @@ test.describe('UI Navigation', () => {
     test.beforeEach(async ({ page }) => {
         // Navigate to the app - user is pre-authenticated
         await page.goto('/');
-        await page.waitForURL(/\/chat/, { timeout: 10000 });
+        await page.getByText('My User').waitFor({ timeout: 10000 });
     });
 
     test('should display main application layout', async ({ page }) => {

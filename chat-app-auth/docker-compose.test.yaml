@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 services:
     chat-app-db-test:
         image: postgres:17
@@ -10,24 +10,32 @@ services:
         volumes:
             - chat-app-db-test-data:/var/lib/postgresql/data
         ports:
-            - "5434:5432"
+            - '5434:5432'
         networks:
             - chat-app-test-net
+    chat-app-db-test-migrator:
+        build:
+            context: ../chat-app-db
+        depends_on:
+            - 'chat-app-db-test'
+        environment:
+            DATABASE_URL: postgres://chatapp_test:chatapp_test@chat-app-db-test:5432/chatapp_test
+        command: sh -c "npm run migrate && npm run seed"
+        networks:
+            - chat-app-test-net
+        restart: 'no'
     chat-app-graphql-engine-test:
         image: hasura/graphql-engine:v2.48.4-ce.cli-migrations-v3
         depends_on:
-            - "chat-app-db-test"
+            - 'chat-app-db-test-migrator'
         restart: unless-stopped
-        environment:
-            HASURA_GRAPHQL_DATABASE_URL: postgres://chatapp_test:chatapp_test@chat-app-db-test:5432/chatapp_test
-            HASURA_GRAPHQL_ENABLE_CONSOLE: "false"
-            HASURA_GRAPHQL_ADMIN_SECRET: test-admin-secret
-            HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
+        env_file:
+            - ../chat-app-graphql-engine/.env.test.local
         volumes:
             - ../chat-app-graphql-engine/migrations:/hasura-migrations
             - ../chat-app-graphql-engine/metadata:/hasura-metadata
         ports:
-            - "8082:8080"
+            - '8082:8080'
         networks:
             - chat-app-test-net
     chat-app-auth-test:
@@ -35,20 +43,20 @@ services:
             context: .
         restart: unless-stopped
         depends_on:
-            - "chat-app-db-test"
-            - "chat-app-graphql-engine-test"
+            - 'chat-app-db-test-migrator'
+            - 'chat-app-graphql-engine-test'
+        env_file:
+            - ../chat-app-auth/.env.test.local
         environment:
             DATABASE_URL: postgres://chatapp_test:chatapp_test@chat-app-db-test:5432/chatapp_test
-            SESSION_SECRET: test-secret-for-integration-tests
-            NODE_ENV: test
         volumes:
             - .:/usr/src/app
             - /usr/src/app/node_modules
         ports:
-            - "8086:8084"
+            - '8086:8084'
         networks:
             - chat-app-test-net
-        command: ["npm", "run", "test:integration"]
+        command: ['npm', 'run', 'test:integration']
 
 volumes:
     chat-app-db-test-data:

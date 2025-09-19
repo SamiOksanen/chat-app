@@ -24,7 +24,7 @@ test.describe('Authentication Flows', () => {
         await page.click('button[type="submit"]');
 
         // Wait for redirect to main app
-        await page.waitForURL(/\/chat/, { timeout: 10000 });
+        await page.getByText('My User').waitFor({ timeout: 10000 });
 
         // Check that we're logged in (should see chat interface)
         await expect(
@@ -50,12 +50,13 @@ test.describe('Authentication Flows', () => {
         await page.fill('input[type="password"]', 'testpassword');
         await page.click('button[type="submit"]');
 
-        await page.waitForURL(/\/chat/, { timeout: 10000 });
+        await page.getByText('My User').waitFor({ timeout: 10000 });
 
         // Find and click logout button
         await page.click('[data-testid="logout-button"]');
 
         // Should redirect to login page
+        await page.getByText('Login').waitFor({ timeout: 10000 });
         await page.waitForURL(/\/login/, { timeout: 5000 });
         await expect(page.locator('input[type="text"]')).toBeVisible();
     });
@@ -66,7 +67,7 @@ test.describe('Authentication Flows', () => {
         await page.fill('input[type="password"]', 'testpassword');
         await page.click('button[type="submit"]');
 
-        await page.waitForURL(/\/chat/, { timeout: 10000 });
+        await page.getByText('My User').waitFor({ timeout: 10000 });
 
         // Refresh the page
         await page.reload();

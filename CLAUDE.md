@@ -9,7 +9,7 @@ This is a full-stack chat application with a microservices architecture:
 - **chat-app-front**: React + Vite frontend with TypeScript, Ant Design UI components, Apollo GraphQL client
 - **chat-app-auth**: Node.js authentication service with Express, Passport, PostgreSQL via Knex/Objection ORM
 - **chat-app-graphql-engine**: Hasura GraphQL engine for data layer and real-time subscriptions
-- **chat-app-db**: PostgreSQL database
+- **chat-app-db**: PostgreSQL database with integrated migration and seeding service
 - **chat-app-proxy**: Nginx reverse proxy
 
 The application uses Docker Compose for orchestration with separate development and production configurations.
@@ -42,6 +42,15 @@ npm run test:ui      # Vitest UI
 npm run test:coverage # Test coverage
 ```
 
+### Database (chat-app-db)
+```bash
+cd chat-app-db
+npm run migrate      # Run pending migrations
+npm run seed         # Run pending seeds
+npm run reset        # Run migrations and seeds
+npm run status       # Show migration and seed status
+```
+
 ### Code Quality & Formatting (Unified)
 ```bash
 # Run from project root - applies to all services
@@ -70,16 +79,29 @@ docker-compose -f docker-compose.prod.yaml down
 
 ## Database & Migrations
 
-### Hasura Console
+### Database Migrations
+Database schema migrations are managed by the chat-app-db service using Node.js scripts:
+
 ```bash
-# Open Hasura console (auto-generates migration files)
-hasura console --endpoint <endpoint> --admin-secret <admin-secret>
+# Migrations run automatically with Docker Compose
+docker-compose up -d --build
 
-# Apply migrations manually
-hasura migrate apply --database-name default --endpoint <endpoint> --admin-secret <admin-secret> && hasura metadata apply --endpoint <endpoint> --admin-secret <admin-secret>
+# Manual migration management
+cd chat-app-db
+npm run migrate      # Apply pending migrations
+npm run seed         # Apply pending seeds (development only)
+npm run status       # Check migration status
+```
 
+### Hasura Metadata Management
+While schema migrations are handled by chat-app-db, Hasura metadata is still managed through Hasura CLI:
+
+```bash
 # Export metadata changes
 hasura metadata export --endpoint <endpoint> --admin-secret <admin-secret>
+
+# Apply metadata changes
+hasura metadata apply --endpoint <endpoint> --admin-secret <admin-secret>
 ```
 
 ### Database Setup
@@ -133,7 +155,8 @@ Production equivalents use `.env.production.local` files.
   - Shared `.prettierrc.json` for consistent formatting
   - Dependencies centralized in root `package.json`
   - Service configs inherit from root automatically
-- Database migrations managed through Hasura CLI
+- Database schema migrations managed through chat-app-db service with Node.js scripts
+- Hasura metadata managed through Hasura CLI
 - Real-time features implemented via GraphQL subscriptions
 
 # Workflow

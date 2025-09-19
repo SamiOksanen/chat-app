@@ -1,4 +1,5 @@
 # Chat App
+
 ![image](https://img.shields.io/badge/GraphQl-E10098?style=for-the-badge&logo=graphql&logoColor=white)
 ![image](https://img.shields.io/badge/Hasura-1EB4D4?style=for-the-badge&logo=hasura&logoColor=white)
 ![image](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
@@ -17,25 +18,29 @@ Application for having conversations with other users individually and in groups
 ## Setup 🪄
 
 ### Install:
+
 - Node.js
 - Docker
 - Hasura CLI
 
 ### Install dependencies
+
 Install root dependencies (ESLint, Prettier, shared tooling) and service-specific dependencies
+
 ```bash
 npm i
 ```
 
 ### Required environment variables
-- Add a `.env.development.local` and `.env.production.local` files at the `chat-app-front` and `chat-app-graphql-engine` directories of the repo, by copying the `.env.development.example` and `.env.production.example` files.
-- Add a `.env.development.local`, `.env.test.local` and `.env.production.local` files at the `chat-app-auth` directory of the repo, by copying the `.env.development.example`, `.env.test.example` and `.env.production.example` files.
+
+- Add a `.env.development.local`, `.env.test.local` and `.env.production.local` files at the `chat-app-auth`, `chat-app-front` and `chat-app-graphql-engine` directories of the repo, by copying the `.env.development.example`, `.env.test.example` and `.env.production.example` files.
 - Add a `.env.local` file at the `chat-app-db` directory of the repo, by copying the `.env.example` file.
 - Set values to the environment variables in the `.env` files.
 
 ## Code Quality & Development 🔧
 
 ### Unified Linting & Formatting
+
 The project uses centralized ESLint and Prettier configurations for consistent code quality across all services.
 
 ```bash
@@ -50,43 +55,51 @@ cd chat-app-front
 npm run lint         # Frontend linting only
 npm run format       # Frontend formatting only
 
-cd chat-app-auth  
+cd chat-app-auth
 npm run lint         # Backend linting only
 npm run format       # Backend formatting only
 ```
 
 ## Run the app in development mode
+
 ```bash
 docker-compose up -d --build
 ```
 
 ### Cleanup in development mode 🧹
+
 ```bash
 docker-compose down
 ```
 
 ## Run the app in production mode
+
 ```bash
 docker-compose -f docker-compose.prod.yaml up -d --build
 ```
 
 ### Cleanup in production mode 🧹
+
 ```bash
 docker-compose -f docker-compose.prod.yaml down
 ```
 
 ## Hasura migrations
-Open console from CLI with `hasura console --endpoint <endpoint> --admin-secret <admin-secret>` and it should handle creating the migration files automatically.
+
+Open console from CLI with `hasura console --endpoint <endpoint> --admin-secret <admin-secret>` and it should handle creating the migration files automatically. After creating new migration files, move them to chat-app-db/migrations and export new changes to hasura metadata using `hasura metadata export --endpoint <endpoint> --admin-secret <admin-secret>`.
 
 ### Manual operations
-- Initialise the migration from ground up (use only when you know what you are doing)
-    - `hasura migrate create init --from-server --endpoint <endpoint> --admin-secret <admin-secret>`
+
 - pull new changes to metadata
     - `hasura metadata export --endpoint <endpoint> --admin-secret <admin-secret>`
+- apply metadata changes
+    - `hasura metadata apply --endpoint <endpoint> --admin-secret <admin-secret>`
+- Initialise the migration from ground up (use only when you know what you are doing)
+    - `hasura migrate create init --from-server --endpoint <endpoint> --admin-secret <admin-secret>`
 - apply migrations
     - https://hasura.io/docs/latest/hasura-cli/commands/hasura_migrate_apply/
     - `hasura migrate apply --endpoint <endpoint> --admin-secret <admin-secret> --version <version> --up --skip-execution`
-- apply migrations manually 
+- apply migrations manually
     - `hasura migrate apply --database-name default --endpoint <endpoint> --admin-secret <admin-secret> && hasura metadata apply --endpoint <endpoint> --admin-secret <admin-secret>`
 - squash the migration files
     - `hasura migrate squash --from <version>`

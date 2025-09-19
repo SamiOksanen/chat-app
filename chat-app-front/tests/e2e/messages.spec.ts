@@ -4,7 +4,7 @@ test.describe('Messages', () => {
     test.beforeEach(async ({ page }) => {
         // Navigate to the app - user is pre-authenticated
         await page.goto('/');
-        await page.waitForURL(/\/chat/, { timeout: 10000 });
+        await page.getByText('My User').waitFor({ timeout: 10000 });
 
         // Click on the first conversation to enter it
         await page.click('[data-testid="conversation-item"]:first-child');

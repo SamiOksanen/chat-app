@@ -14,11 +14,11 @@ export default defineConfig({
     /* Opt out of parallel tests on CI. */
     workers: process.env.CI ? 1 : undefined,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    reporter: [['html'], ['json', { outputFile: 'test-results/results.json' }]],
+    reporter: process.env.CI ? 'dot' : 'line',
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         /* Base URL to use in actions like `await page.goto('/')`. */
-        baseURL: 'http://localhost:82',
+        baseURL: 'http://localhost:81',
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
@@ -40,7 +40,7 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome'],
                 // Use the saved authentication state
-                storageState: 'playwright/.auth/user.json',
+                storageState: 'tests/e2e/.auth/user.json',
             },
             dependencies: ['setup'],
         },
@@ -50,7 +50,7 @@ export default defineConfig({
             name: 'firefox',
             use: {
                 ...devices['Desktop Firefox'],
-                storageState: 'playwright/.auth/user.json'
+                storageState: 'tests/e2e/.auth/user.json'
             },
             dependencies: ['setup'],
         },
@@ -59,7 +59,7 @@ export default defineConfig({
             name: 'webkit',
             use: {
                 ...devices['Desktop Safari'],
-                storageState: 'playwright/.auth/user.json'
+                storageState: 'tests/e2e/.auth/user.json'
             },
             dependencies: ['setup'],
         },
@@ -70,7 +70,7 @@ export default defineConfig({
             name: 'Mobile Chrome',
             use: {
                 ...devices['Pixel 5'],
-                storageState: 'playwright/.auth/user.json'
+                storageState: 'tests/e2e/.auth/user.json'
             },
             dependencies: ['setup'],
         },
@@ -78,7 +78,7 @@ export default defineConfig({
             name: 'Mobile Safari',
             use: {
                 ...devices['iPhone 12'],
-                storageState: 'playwright/.auth/user.json'
+                storageState: 'tests/e2e/.auth/user.json'
             },
             dependencies: ['setup'],
         },
@@ -98,7 +98,7 @@ export default defineConfig({
     /* Run your local dev server before starting the tests */
     webServer: {
         command: 'docker-compose -f docker-compose.test.yaml up --build',
-        url: 'http://localhost:82',
+        url: 'http://localhost:81',
         reuseExistingServer: !process.env.CI,
         timeout: 120 * 1000, // 2 minutes timeout for services to start
     },
@@ -106,7 +106,8 @@ export default defineConfig({
     /* Test timeout */
     timeout: 30 * 1000, // 30 seconds
 
-    /* Global setup and teardown */
-    globalSetup: './tests/global-setup.ts',
-    globalTeardown: './tests/global-teardown.ts',
+    /* Global setup and teardown
+    globalSetup: './tests/e2e/global-setup.ts',
+    globalTeardown: './tests/e2e/global-teardown.ts',
+    */
 });

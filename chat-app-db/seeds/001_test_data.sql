@@ -24,11 +24,11 @@ BEGIN
 
         -- Insert test users
         INSERT INTO users (username, password, token, email, theme, createdt) VALUES
-        ('testuser1', '$2b$10$rOKCXMYGNgCEA8xhJoKSJOjCUyL8QmkA5JoP9hDsQ2jQ8EGsRrGTK', 'test-token-user1-12345', 'testuser1@example.com', 'light', NOW() - INTERVAL '7 days'),
-        ('testuser2', '$2b$10$rOKCXMYGNgCEA8xhJoKSJOjCUyL8QmkA5JoP9hDsQ2jQ8EGsRrGTK', 'test-token-user2-67890', 'testuser2@example.com', 'dark', NOW() - INTERVAL '5 days'),
-        ('testuser3', '$2b$10$rOKCXMYGNgCEA8xhJoKSJOjCUyL8QmkA5JoP9hDsQ2jQ8EGsRrGTK', 'test-token-user3-abcde', 'testuser3@example.com', 'light', NOW() - INTERVAL '3 days'),
-        ('testuser4', '$2b$10$rOKCXMYGNgCEA8xhJoKSJOjCUyL8QmkA5JoP9hDsQ2jQ8EGsRrGTK', 'test-token-user4-fghij', 'testuser4@example.com', 'dark', NOW() - INTERVAL '2 days'),
-        ('newuser', '$2b$10$rOKCXMYGNgCEA8xhJoKSJOjCUyL8QmkA5JoP9hDsQ2jQ8EGsRrGTK', 'test-token-newuser-klmno', 'newuser@example.com', 'light', NOW() - INTERVAL '1 hour');
+        ('testuser1', '$2b$10$/o.Zs8HezVjfqhXLpUM6vuRRwjk7BxB8xzCFd8XIA78ZJGn2e2kEy', 'test-token-user1-12345', 'testuser1@example.com', 'light', NOW() - INTERVAL '7 days'),
+        ('testuser2', '$2b$10$/o.Zs8HezVjfqhXLpUM6vuRRwjk7BxB8xzCFd8XIA78ZJGn2e2kEy', 'test-token-user2-67890', 'testuser2@example.com', 'dark', NOW() - INTERVAL '5 days'),
+        ('testuser3', '$2b$10$/o.Zs8HezVjfqhXLpUM6vuRRwjk7BxB8xzCFd8XIA78ZJGn2e2kEy', 'test-token-user3-abcde', 'testuser3@example.com', 'light', NOW() - INTERVAL '3 days'),
+        ('testuser4', '$2b$10$/o.Zs8HezVjfqhXLpUM6vuRRwjk7BxB8xzCFd8XIA78ZJGn2e2kEy', 'test-token-user4-fghij', 'testuser4@example.com', 'dark', NOW() - INTERVAL '2 days'),
+        ('newuser', '$2b$10$/o.Zs8HezVjfqhXLpUM6vuRRwjk7BxB8xzCFd8XIA78ZJGn2e2kEy', 'test-token-newuser-klmno', 'newuser@example.com', 'light', NOW() - INTERVAL '1 hour');
 
         -- Insert test conversations
         -- Direct message conversation between user1 and user2

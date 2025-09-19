@@ -1,3 +1,6 @@
+-- Initial database schema for chat application
+-- Contains tables for users, conversations, conversation participants, and messages
+
 SET check_function_bodies = false;
 
 CREATE TABLE users(
@@ -10,6 +13,7 @@ CREATE TABLE users(
     avatarimage BYTEA,
     createdt TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
 CREATE TABLE conversations(
     conversationid serial PRIMARY KEY,
     groupflag VARCHAR (1) NOT NULL,
@@ -19,6 +23,7 @@ CREATE TABLE conversations(
     createdt TIMESTAMP NOT NULL DEFAULT NOW(),
     FOREIGN KEY (adminid) REFERENCES users (userid)
 );
+
 CREATE TABLE conversationusers(
     conversationuserid serial PRIMARY KEY,
     conversationid INT NOT NULL,
@@ -27,6 +32,7 @@ CREATE TABLE conversationusers(
     FOREIGN KEY (conversationid) REFERENCES conversations (conversationid),
     FOREIGN KEY (userid) REFERENCES users (userid)
 );
+
 CREATE TABLE messages(
     messageid serial PRIMARY KEY,
     conversationid INT NOT NULL,

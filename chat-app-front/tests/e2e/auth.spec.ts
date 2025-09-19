@@ -7,7 +7,7 @@ test.describe('Authenticated User State', () => {
         // Navigate to the app - user should already be authenticated
         await page.goto('/');
         // Should automatically redirect to chat since we're authenticated
-        await page.waitForURL(/\/chat/, { timeout: 10000 });
+        await page.getByText('My User').waitFor({ timeout: 10000 });
     });
 
     test('should be logged in and show chat interface', async ({ page }) => {
@@ -36,7 +36,7 @@ test.describe('Authenticated User State', () => {
         await page.reload();
 
         // Should still be logged in and redirect to chat
-        await page.waitForURL(/\/chat/, { timeout: 10000 });
+        await page.getByText('My User').waitFor({ timeout: 10000 });
         await expect(
             page.locator('[data-testid="chat-container"]')
         ).toBeVisible({ timeout: 5000 });
