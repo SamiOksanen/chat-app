@@ -60,33 +60,33 @@ npm run lint         # Backend linting only
 npm run format       # Backend formatting only
 ```
 
-## Run the app in development mode
+## Run the app in development mode 🚀
 
 ```bash
-docker-compose up -d --build
+npm run start
 ```
 
 ### Cleanup in development mode 🧹
 
 ```bash
-docker-compose down
+npm run stop
 ```
 
-## Run the app in production mode
+## Run the app in production mode 🚀
 
 ```bash
-docker-compose -f docker-compose.prod.yaml up -d --build
+npm run start:prod
 ```
 
 ### Cleanup in production mode 🧹
 
 ```bash
-docker-compose -f docker-compose.prod.yaml down
+npm run stop:prod
 ```
 
-## Hasura migrations
+## Hasura migrations (`cd chat-app-graphql-engine`)
 
-Open console from CLI with `hasura console --endpoint <endpoint> --admin-secret <admin-secret>` and it should handle creating the migration files automatically. After creating new migration files, move them to chat-app-db/migrations and export new changes to hasura metadata using `hasura metadata export --endpoint <endpoint> --admin-secret <admin-secret>`.
+Open console from CLI with `hasura console --endpoint http://localhost:8081 --admin-secret chatappadminsecretkey` and it should handle creating the migration files automatically. After creating new migration files, move them to chat-app-db/migrations and export new changes to hasura metadata using `hasura metadata export --endpoint http://localhost:8081 --admin-secret chatappadminsecretkey`.
 
 ### Manual operations
 
