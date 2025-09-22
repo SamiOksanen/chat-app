@@ -60,6 +60,39 @@ npm run lint         # Backend linting only
 npm run format       # Backend formatting only
 ```
 
+## Testing 🧪
+
+### Unit Tests (Frontend)
+```bash
+cd chat-app-front
+npm test             # Run unit tests with Vitest
+npm run test:ui      # Run tests with Vitest UI
+npm run test:coverage # Generate test coverage report
+```
+
+### End-to-End Tests (Frontend)
+The application includes comprehensive e2e tests using Playwright that test the full application stack.
+
+```bash
+cd chat-app-front
+npm run test:e2e          # Run e2e tests (auto-starts test environment)
+npm run test:e2e:ui       # Run with Playwright UI
+npm run test:e2e:headed   # Run in headed browser mode
+npm run test:e2e:debug    # Run in debug mode
+npm run test:e2e:setup    # Start test environment only
+npm run test:e2e:cleanup  # Stop test environment
+npm run test:e2e:complete # Full cycle: setup → test → cleanup
+```
+
+**What the e2e tests cover:**
+- 🔐 Authentication flows (login, logout, session management)
+- 🧭 UI navigation between different views
+- 💬 Conversation management (create, view, manage)
+- 📝 Message functionality (send, receive, display)
+- ⚡ Real-time features via GraphQL subscriptions
+
+The e2e tests use a dedicated test environment with separate Docker services running on different ports to avoid conflicts with development.
+
 ## Run the app in development mode 🚀
 
 ```bash

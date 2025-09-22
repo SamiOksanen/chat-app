@@ -40,6 +40,13 @@ npm run format:check # Check formatting
 npm test             # Vitest tests
 npm run test:ui      # Vitest UI
 npm run test:coverage # Test coverage
+npm run test:e2e      # Playwright e2e tests
+npm run test:e2e:ui   # Playwright e2e tests with UI
+npm run test:e2e:headed # Playwright e2e tests in headed mode
+npm run test:e2e:debug # Playwright e2e tests in debug mode
+npm run test:e2e:setup # Start test environment only
+npm run test:e2e:cleanup # Stop test environment
+npm run test:e2e:complete # Full e2e test cycle with setup/cleanup
 ```
 
 ### Database (chat-app-db)
@@ -143,9 +150,42 @@ Each service requires environment files:
 Production equivalents use `.env.production.local` files.
 
 ## Testing Strategy
-- Frontend: Vitest with @testing-library/react
-- Test files in `chat-app-front/src/tests/`
-- Coverage reporting available via `npm run test:coverage`
+- **Frontend Unit Tests**: Vitest with @testing-library/react
+  - Test files in `chat-app-front/src/tests/`
+  - Coverage reporting available via `npm run test:coverage`
+- **Frontend E2E Tests**: Playwright with full application stack
+  - Test files in `chat-app-front/tests/e2e/`
+  - Uses dedicated test environment with Docker Compose
+  - Automated authentication setup with shared state
+  - Tests run against http://localhost:81 (full stack)
+  - Configuration in `chat-app-front/playwright.config.ts`
+
+### E2E Test Environment
+The e2e tests use a separate Docker Compose stack (`docker-compose.test.yaml`) that includes:
+- **chat-app-db-test**: PostgreSQL test database on port 5434
+- **chat-app-db-test-migrator**: Runs migrations and seeds test data
+- **chat-app-auth-test**: Auth service on port 8086
+- **chat-app-graphql-engine-test**: Hasura GraphQL engine on port 8082
+- **chat-app-front-test**: Frontend served on port 81
+
+### E2E Test Commands
+```bash
+cd chat-app-front
+npm run test:e2e          # Run tests (auto-starts test environment)
+npm run test:e2e:ui       # Run with Playwright UI
+npm run test:e2e:headed   # Run in headed browser mode
+npm run test:e2e:debug    # Run in debug mode
+npm run test:e2e:setup    # Start test environment only
+npm run test:e2e:cleanup  # Stop test environment
+npm run test:e2e:complete # Full cycle: setup → test → cleanup
+```
+
+### Test Coverage
+- **Authentication flows**: Login, logout, session management
+- **Navigation**: UI navigation between different views
+- **Conversations**: Creating, viewing, managing conversations
+- **Messages**: Sending, receiving, displaying messages
+- **Real-time features**: WebSocket connections via GraphQL subscriptions
 
 ## Development Notes
 - Both frontend and backend use ES modules (`"type": "module"`)
