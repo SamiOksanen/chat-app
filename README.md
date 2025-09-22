@@ -1,4 +1,5 @@
 # Chat App
+
 ![image](https://img.shields.io/badge/GraphQl-E10098?style=for-the-badge&logo=graphql&logoColor=white)
 ![image](https://img.shields.io/badge/Hasura-1EB4D4?style=for-the-badge&logo=hasura&logoColor=white)
 ![image](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
@@ -7,6 +8,7 @@
 ![image](https://img.shields.io/badge/Ant%20Design-1890FF?style=for-the-badge&logo=antdesign&logoColor=white)
 ![image](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 ![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![image](https://img.shields.io/badge/Playwright-45ba4b?style=for-the-badge&logo=playwright&logoColor=white)
 ![image](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
 ![image](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)
 
@@ -17,25 +19,53 @@ Application for having conversations with other users individually and in groups
 ## Setup 🪄
 
 ### Install:
+
 - Node.js
 - Docker
 - Hasura CLI
 
 ### Install dependencies
+
 Install root dependencies (ESLint, Prettier, shared tooling) and service-specific dependencies
+
 ```bash
 npm i
 ```
 
 ### Required environment variables
-- Add a `.env.development.local` and `.env.production.local` files at the `chat-app-front` and `chat-app-graphql-engine` directories of the repo, by copying the `.env.development.example` and `.env.production.example` files.
-- Add a `.env.development.local`, `.env.test.local` and `.env.production.local` files at the `chat-app-auth` directory of the repo, by copying the `.env.development.example`, `.env.test.example` and `.env.production.example` files.
+
+- Add a `.env.development.local`, `.env.test.local` and `.env.production.local` files at the `chat-app-auth`, `chat-app-front` and `chat-app-graphql-engine` directories of the repo, by copying the `.env.development.example`, `.env.test.example` and `.env.production.example` files.
 - Add a `.env.local` file at the `chat-app-db` directory of the repo, by copying the `.env.example` file.
 - Set values to the environment variables in the `.env` files.
+
+## Run the app in development mode 🚀
+
+```bash
+npm run start
+```
+
+### Cleanup in development mode 🧹
+
+```bash
+npm run stop
+```
+
+## Run the app in production mode 🚀
+
+```bash
+npm run start:prod
+```
+
+### Cleanup in production mode 🧹
+
+```bash
+npm run stop:prod
+```
 
 ## Code Quality & Development 🔧
 
 ### Unified Linting & Formatting
+
 The project uses centralized ESLint and Prettier configurations for consistent code quality across all services.
 
 ```bash
@@ -50,43 +80,90 @@ cd chat-app-front
 npm run lint         # Frontend linting only
 npm run format       # Frontend formatting only
 
-cd chat-app-auth  
+cd chat-app-auth
 npm run lint         # Backend linting only
 npm run format       # Backend formatting only
 ```
 
-## Run the app in development mode
+## Testing 🧪
+
+### Unit Tests (Frontend)
+
 ```bash
-docker-compose up -d --build
+cd chat-app-front
+npm test             # Run unit tests with Vitest
+npm run test:ui      # Run tests with Vitest UI
+npm run test:coverage # Generate test coverage report
 ```
 
-### Cleanup in development mode 🧹
+### Unit & Integration Tests (Backend)
+
+The backend includes comprehensive testing with both unit tests (fast, mocked dependencies) and integration tests (real database, HTTP requests).
+
 ```bash
-docker-compose down
+cd chat-app-auth
+# Unit Tests (61 tests across 7 suites)
+npm test                          # Fast unit tests with mocked dependencies
+npm run test:watch                # Unit tests in watch mode
+npm run test:coverage             # Unit tests with coverage report
+
+# Integration Tests (23 tests across 2 suites)
+npm run test:integration          # Full integration tests with Docker
+npm run test:integration:watch    # Integration tests in watch mode
+npm run test:integration:coverage # Integration tests with coverage
+
+# All Tests
+npm run test:all                  # Run both unit and integration tests
 ```
 
-## Run the app in production mode
+**Backend test coverage includes:**
+
+- 🔧 **Unit Tests**: User models, controllers, authentication strategies, error handling
+- 🔌 **Integration Tests**: Real HTTP API endpoints with SuperTest and PostgreSQL
+- 🔐 **Authentication Testing**: Registration, login, JWT tokens, Hasura webhooks
+- 🗄️ **Database Testing**: Real database operations, constraints, migrations
+
+### End-to-End Tests (Frontend)
+
+The application includes comprehensive e2e tests using Playwright that test the full application stack.
+
 ```bash
-docker-compose -f docker-compose.prod.yaml up -d --build
+cd chat-app-front
+npm run test:e2e          # Run e2e tests (auto-starts test environment)
+npm run test:e2e:ui       # Run with Playwright UI
+npm run test:e2e:headed   # Run in headed browser mode
+npm run test:e2e:debug    # Run in debug mode
+npm run test:e2e:setup    # Start test environment only
+npm run test:e2e:cleanup  # Stop test environment
+npm run test:e2e:complete # Full cycle: setup → test → cleanup
 ```
 
-### Cleanup in production mode 🧹
-```bash
-docker-compose -f docker-compose.prod.yaml down
-```
+**What the e2e tests cover:**
 
-## Hasura migrations
-Open console from CLI with `hasura console --endpoint <endpoint> --admin-secret <admin-secret>` and it should handle creating the migration files automatically.
+- 🔐 Authentication flows (login, logout, session management)
+- 🧭 UI navigation between different views
+- 💬 Conversation management (create, view, manage)
+- 📝 Message functionality (send, receive, display)
+- ⚡ Real-time features via GraphQL subscriptions
+
+The e2e tests use a dedicated test environment with separate Docker services running on different ports to avoid conflicts with development.
+
+## Hasura migrations (`cd chat-app-graphql-engine`)
+
+Open console from CLI with `hasura console --endpoint http://localhost:8081 --admin-secret chatappadminsecretkey` and it should handle creating the migration files automatically. After creating new migration files, move them to chat-app-db/migrations and export new changes to hasura metadata using `hasura metadata export --endpoint http://localhost:8081 --admin-secret chatappadminsecretkey`.
 
 ### Manual operations
-- Initialise the migration from ground up (use only when you know what you are doing)
-    - `hasura migrate create init --from-server --endpoint <endpoint> --admin-secret <admin-secret>`
+
 - pull new changes to metadata
     - `hasura metadata export --endpoint <endpoint> --admin-secret <admin-secret>`
+- apply metadata changes
+    - `hasura metadata apply --endpoint <endpoint> --admin-secret <admin-secret>`
+- Initialise the migration from ground up (use only when you know what you are doing)
+    - `hasura migrate create init --from-server --endpoint <endpoint> --admin-secret <admin-secret>`
 - apply migrations
     - https://hasura.io/docs/latest/hasura-cli/commands/hasura_migrate_apply/
     - `hasura migrate apply --endpoint <endpoint> --admin-secret <admin-secret> --version <version> --up --skip-execution`
-- apply migrations manually 
+- apply migrations manually
     - `hasura migrate apply --database-name default --endpoint <endpoint> --admin-secret <admin-secret> && hasura metadata apply --endpoint <endpoint> --admin-secret <admin-secret>`
 - squash the migration files
     - `hasura migrate squash --from <version>`

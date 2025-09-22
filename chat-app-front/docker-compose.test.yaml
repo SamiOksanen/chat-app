@@ -24,10 +24,28 @@ services:
         networks:
             - chat-app-test-net
         restart: 'no'
+    chat-app-auth-test:
+        build:
+            context: ../chat-app-auth
+        restart: unless-stopped
+        depends_on:
+            - 'chat-app-db-test-migrator'
+        env_file:
+            - ./../chat-app-auth/.env.test.local
+        environment:
+            DATABASE_URL: postgres://chatapp_test:chatapp_test@chat-app-db-test:5432/chatapp_test
+        volumes:
+            - ../chat-app-auth:/usr/src/app
+            - /usr/src/app/node_modules
+        ports:
+            - '8086:8084'
+        networks:
+            - chat-app-test-net
     chat-app-graphql-engine-test:
         image: hasura/graphql-engine:v2.48.4-ce.cli-migrations-v3
         depends_on:
             - 'chat-app-db-test-migrator'
+            - 'chat-app-auth-test'
         restart: unless-stopped
         env_file:
             - ../chat-app-graphql-engine/.env.test.local
@@ -38,25 +56,21 @@ services:
             - '8082:8080'
         networks:
             - chat-app-test-net
-    chat-app-auth-test:
+    chat-app-front-test:
         build:
             context: .
         restart: unless-stopped
         depends_on:
-            - 'chat-app-db-test-migrator'
             - 'chat-app-graphql-engine-test'
         env_file:
-            - ../chat-app-auth/.env.test.local
-        environment:
-            DATABASE_URL: postgres://chatapp_test:chatapp_test@chat-app-db-test:5432/chatapp_test
+            - ./.env.test.local
         volumes:
             - .:/usr/src/app
             - /usr/src/app/node_modules
         ports:
-            - '8086:8084'
+            - '81:3000'
         networks:
             - chat-app-test-net
-        command: ['npm', 'run', 'test:integration']
 
 volumes:
     chat-app-db-test-data:

@@ -45,6 +45,8 @@ export default [
         files: [
             'chat-app-front/**/*.test.{js,jsx,ts,tsx}',
             'chat-app-front/**/__tests__/**/*.{js,jsx,ts,tsx}',
+            'chat-app-front/tests/**/*.{js,jsx,ts,tsx}',
+            'chat-app-front/playwright.config.ts',
             'chat-app-front/src/setupTests.ts',
         ],
         languageOptions: {

@@ -1,0 +1,19 @@
+{
+  "name": "chat-app-db",
+  "version": "1.0.0",
+  "description": "Database migrations and seeding for chat application",
+  "type": "module",
+  "scripts": {
+    "wait-for-db": "node scripts/wait-for-db.js",
+    "migrate": "node scripts/migrate.js",
+    "seed": "node scripts/seed.js",
+    "reset": "npm run migrate && npm run seed",
+    "status": "node scripts/status.js"
+  },
+  "dependencies": {
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.10.7"
+  }
+}

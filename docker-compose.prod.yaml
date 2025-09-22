@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 services:
     chat-app-prod-db:
         image: postgres:17
@@ -8,26 +8,37 @@ services:
         volumes:
             - ./chat-app-db/data-prod:/var/lib/postgresql/data
         ports:
-            - "5432:5432"
+            - '5432:5432'
         networks:
             chat-app-prod-net:
                 aliases:
                     - chat-app-db
+    chat-app-prod-db-migrator:
+        build:
+            context: ./chat-app-db
+        depends_on:
+            - 'chat-app-prod-db'
+        env_file:
+            - ./chat-app-db/.env.local
+        environment:
+            DATABASE_URL: postgres://chatapp:chatapp@chat-app-prod-db:5432/chatapp
+        command: sh -c "npm run migrate"
+        networks:
+            - chat-app-prod-net
+        restart: 'no'
     chat-app-prod-auth:
         build:
             context: ./chat-app-auth
             dockerfile: Dockerfile.prod
         depends_on:
-            - "chat-app-prod-db"
+            - 'chat-app-prod-db-migrator'
         env_file:
             - ./chat-app-auth/.env.production.local
-        environment:
-            DATABASE_URL: postgres://chatapp:chatapp@chat-app-prod-db:5432/chatapp
         volumes:
             - ./chat-app-auth:/usr/src/app
             - /usr/src/app/node_modules
         ports:
-            - "8084:8084"
+            - '8084:8084'
         networks:
             chat-app-prod-net:
                 aliases:
@@ -35,8 +46,8 @@ services:
     chat-app-prod-graphql-engine:
         image: hasura/graphql-engine:v2.48.4-ce.cli-migrations-v3
         depends_on:
-            - "chat-app-prod-db"
-            - "chat-app-prod-auth"
+            - 'chat-app-prod-db-migrator'
+            - 'chat-app-prod-auth'
         restart: unless-stopped
         env_file:
             - ./chat-app-graphql-engine/.env.production.local
@@ -44,7 +55,7 @@ services:
             - ./chat-app-graphql-engine/migrations:/hasura-migrations
             - ./chat-app-graphql-engine/metadata:/hasura-metadata
         ports:
-            - "8080:8080"
+            - '8080:8080'
         networks:
             chat-app-prod-net:
                 aliases:
@@ -55,7 +66,7 @@ services:
             dockerfile: Dockerfile.prod
         restart: unless-stopped
         depends_on:
-            - "chat-app-prod-graphql-engine"
+            - 'chat-app-prod-graphql-engine'
         env_file:
             - ./chat-app-front/.env.production.local
         volumes:
@@ -70,14 +81,14 @@ services:
             context: ./chat-app-proxy
         restart: unless-stopped
         depends_on:
-            - "chat-app-prod-graphql-engine"
-            - "chat-app-prod-front"
+            - 'chat-app-prod-graphql-engine'
+            - 'chat-app-prod-front'
         volumes:
             - ./chat-app-proxy/nginx.conf:/etc/nginx/conf.d/default.conf
             - ./chat-app-proxy/logs/access.log:/var/log/nginx/access.log
             - ./chat-app-proxy/logs/error.log:/var/log/nginx/error.log
         ports:
-            - "80:80"
+            - '80:80'
         networks:
             chat-app-prod-net:
                 aliases:

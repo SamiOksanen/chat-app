@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 services:
     chat-app-db:
         image: postgres:17
@@ -8,15 +8,28 @@ services:
         volumes:
             - ./chat-app-db/data:/var/lib/postgresql/data
         ports:
-            - "5433:5432"
+            - '5433:5432'
         networks:
             - chat-app-net
+    chat-app-db-migrator:
+        build:
+            context: ./chat-app-db
+        depends_on:
+            - 'chat-app-db'
+        env_file:
+            - ./chat-app-db/.env.local
+        environment:
+            DATABASE_URL: postgres://chatapp:chatapp@chat-app-db:5432/chatapp
+        command: sh -c "npm run migrate && npm run seed"
+        networks:
+            - chat-app-net
+        restart: 'no'
     chat-app-auth:
         build:
             context: ./chat-app-auth
         restart: unless-stopped
         depends_on:
-            - "chat-app-db"
+            - 'chat-app-db-migrator'
         env_file:
             - ./chat-app-auth/.env.development.local
         environment:
@@ -25,14 +38,14 @@ services:
             - ./chat-app-auth:/usr/src/app
             - /usr/src/app/node_modules
         ports:
-            - "8085:8084"
+            - '8085:8084'
         networks:
             - chat-app-net
     chat-app-graphql-engine:
         image: hasura/graphql-engine:v2.48.4-ce.cli-migrations-v3
         depends_on:
-            - "chat-app-db"
-            - "chat-app-auth"
+            - 'chat-app-db-migrator'
+            - 'chat-app-auth'
         restart: unless-stopped
         env_file:
             - ./chat-app-graphql-engine/.env.development.local
@@ -40,7 +53,7 @@ services:
             - ./chat-app-graphql-engine/migrations:/hasura-migrations
             - ./chat-app-graphql-engine/metadata:/hasura-metadata
         ports:
-            - "8081:8080"
+            - '8081:8080'
         networks:
             - chat-app-net
     chat-app-front:
@@ -48,14 +61,14 @@ services:
             context: ./chat-app-front
         restart: unless-stopped
         depends_on:
-            - "chat-app-graphql-engine"
+            - 'chat-app-graphql-engine'
         env_file:
             - ./chat-app-front/.env.development.local
         volumes:
             - ./chat-app-front:/usr/src/app
             - /usr/src/app/node_modules
         ports:
-            - "81:3000"
+            - '81:3000'
         networks:
             - chat-app-net
 networks:
