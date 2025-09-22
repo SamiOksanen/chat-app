@@ -26,6 +26,13 @@ npm run lint         # ESLint
 npm run lint:fix     # ESLint with auto-fix
 npm run format       # Prettier formatting
 npm run format:check # Check formatting
+npm test             # Jest unit tests
+npm run test:watch   # Jest unit tests in watch mode
+npm run test:coverage # Jest unit tests with coverage
+npm run test:integration # Jest integration tests (with Docker)
+npm run test:integration:watch # Integration tests in watch mode
+npm run test:integration:coverage # Integration tests with coverage
+npm run test:all     # Run both unit and integration tests
 ```
 
 ### Frontend (chat-app-front)
@@ -159,6 +166,17 @@ Production equivalents use `.env.production.local` files.
   - Automated authentication setup with shared state
   - Tests run against http://localhost:81 (full stack)
   - Configuration in `chat-app-front/playwright.config.ts`
+- **Backend Unit Tests**: Jest with TypeScript and ESM support
+  - Test files in `chat-app-auth/src/__tests__/`
+  - 61 unit tests across 7 test suites
+  - Mocked dependencies for fast execution
+  - Configuration in `chat-app-auth/jest.config.ts`
+- **Backend Integration Tests**: Jest with SuperTest and real database
+  - Test files in `chat-app-auth/src/__tests__/integration/`
+  - 23 integration tests across 2 test suites
+  - Uses Docker Compose for PostgreSQL and Hasura
+  - Real HTTP requests and database operations
+  - Configuration in `chat-app-auth/jest.integration.config.ts`
 
 ### E2E Test Environment
 The e2e tests use a separate Docker Compose stack (`docker-compose.test.yaml`) that includes:
@@ -180,7 +198,35 @@ npm run test:e2e:cleanup  # Stop test environment
 npm run test:e2e:complete # Full cycle: setup → test → cleanup
 ```
 
-### Test Coverage
+### Backend Test Commands
+```bash
+cd chat-app-auth
+npm test                          # Unit tests only (fast, no Docker)
+npm run test:watch                # Unit tests in watch mode
+npm run test:coverage             # Unit tests with coverage report
+npm run test:integration          # Integration tests (with Docker setup/cleanup)
+npm run test:integration:watch    # Integration tests in watch mode
+npm run test:integration:coverage # Integration tests with coverage
+npm run test:all                  # Run both unit and integration tests
+```
+
+### Backend Test Coverage
+**Unit Tests (61 tests across 7 suites):**
+- Core functionality and framework verification
+- User model validation (password hashing, token generation)
+- Controller function structure validation
+- Passport authentication strategy patterns
+- Error handling and response formatting
+- Integration patterns and business logic workflows
+
+**Integration Tests (23 tests across 2 suites):**
+- Complete HTTP API endpoint testing with SuperTest
+- Real PostgreSQL database operations
+- Authentication flow testing (registration, login, webhooks)
+- Database constraint validation
+- Error handling in real scenarios
+
+### Frontend Test Coverage
 - **Authentication flows**: Login, logout, session management
 - **Navigation**: UI navigation between different views
 - **Conversations**: Creating, viewing, managing conversations

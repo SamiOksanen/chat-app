@@ -70,6 +70,31 @@ npm run test:ui      # Run tests with Vitest UI
 npm run test:coverage # Generate test coverage report
 ```
 
+### Unit & Integration Tests (Backend)
+The backend includes comprehensive testing with both unit tests (fast, mocked dependencies) and integration tests (real database, HTTP requests).
+
+```bash
+cd chat-app-auth
+# Unit Tests (61 tests across 7 suites)
+npm test                          # Fast unit tests with mocked dependencies
+npm run test:watch                # Unit tests in watch mode
+npm run test:coverage             # Unit tests with coverage report
+
+# Integration Tests (23 tests across 2 suites)
+npm run test:integration          # Full integration tests with Docker
+npm run test:integration:watch    # Integration tests in watch mode
+npm run test:integration:coverage # Integration tests with coverage
+
+# All Tests
+npm run test:all                  # Run both unit and integration tests
+```
+
+**Backend test coverage includes:**
+- 🔧 **Unit Tests**: User models, controllers, authentication strategies, error handling
+- 🔌 **Integration Tests**: Real HTTP API endpoints with SuperTest and PostgreSQL
+- 🔐 **Authentication Testing**: Registration, login, JWT tokens, Hasura webhooks
+- 🗄️ **Database Testing**: Real database operations, constraints, migrations
+
 ### End-to-End Tests (Frontend)
 The application includes comprehensive e2e tests using Playwright that test the full application stack.
 
