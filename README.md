@@ -8,6 +8,7 @@
 ![image](https://img.shields.io/badge/Ant%20Design-1890FF?style=for-the-badge&logo=antdesign&logoColor=white)
 ![image](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 ![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![image](https://img.shields.io/badge/Playwright-45ba4b?style=for-the-badge&logo=playwright&logoColor=white)
 ![image](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
 ![image](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)
 
@@ -37,6 +38,30 @@ npm i
 - Add a `.env.local` file at the `chat-app-db` directory of the repo, by copying the `.env.example` file.
 - Set values to the environment variables in the `.env` files.
 
+## Run the app in development mode 🚀
+
+```bash
+npm run start
+```
+
+### Cleanup in development mode 🧹
+
+```bash
+npm run stop
+```
+
+## Run the app in production mode 🚀
+
+```bash
+npm run start:prod
+```
+
+### Cleanup in production mode 🧹
+
+```bash
+npm run stop:prod
+```
+
 ## Code Quality & Development 🔧
 
 ### Unified Linting & Formatting
@@ -63,6 +88,7 @@ npm run format       # Backend formatting only
 ## Testing 🧪
 
 ### Unit Tests (Frontend)
+
 ```bash
 cd chat-app-front
 npm test             # Run unit tests with Vitest
@@ -71,6 +97,7 @@ npm run test:coverage # Generate test coverage report
 ```
 
 ### Unit & Integration Tests (Backend)
+
 The backend includes comprehensive testing with both unit tests (fast, mocked dependencies) and integration tests (real database, HTTP requests).
 
 ```bash
@@ -90,12 +117,14 @@ npm run test:all                  # Run both unit and integration tests
 ```
 
 **Backend test coverage includes:**
+
 - 🔧 **Unit Tests**: User models, controllers, authentication strategies, error handling
 - 🔌 **Integration Tests**: Real HTTP API endpoints with SuperTest and PostgreSQL
 - 🔐 **Authentication Testing**: Registration, login, JWT tokens, Hasura webhooks
 - 🗄️ **Database Testing**: Real database operations, constraints, migrations
 
 ### End-to-End Tests (Frontend)
+
 The application includes comprehensive e2e tests using Playwright that test the full application stack.
 
 ```bash
@@ -110,6 +139,7 @@ npm run test:e2e:complete # Full cycle: setup → test → cleanup
 ```
 
 **What the e2e tests cover:**
+
 - 🔐 Authentication flows (login, logout, session management)
 - 🧭 UI navigation between different views
 - 💬 Conversation management (create, view, manage)
@@ -117,30 +147,6 @@ npm run test:e2e:complete # Full cycle: setup → test → cleanup
 - ⚡ Real-time features via GraphQL subscriptions
 
 The e2e tests use a dedicated test environment with separate Docker services running on different ports to avoid conflicts with development.
-
-## Run the app in development mode 🚀
-
-```bash
-npm run start
-```
-
-### Cleanup in development mode 🧹
-
-```bash
-npm run stop
-```
-
-## Run the app in production mode 🚀
-
-```bash
-npm run start:prod
-```
-
-### Cleanup in production mode 🧹
-
-```bash
-npm run stop:prod
-```
 
 ## Hasura migrations (`cd chat-app-graphql-engine`)
 
