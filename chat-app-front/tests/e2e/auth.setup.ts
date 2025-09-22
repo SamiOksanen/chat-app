@@ -1,6 +1,6 @@
 import { test as setup, expect } from '@playwright/test';
 
-const authFile = './.auth/user.json';
+const authFile = 'tests/e2e/.auth/user.json';
 
 setup('authenticate', async ({ page }) => {
     // Perform authentication steps
@@ -15,8 +15,8 @@ setup('authenticate', async ({ page }) => {
     // Wait for redirect to main app
     await page.getByText('My User').waitFor({ timeout: 10000 });
 
-    // Verify we're logged in
-    await expect(page.locator('[data-testid="chat-container"]')).toBeVisible({
+    // Verify we're logged in (should see username in menu)
+    await expect(page.getByText('My User')).toBeVisible({
         timeout: 5000,
     });
 

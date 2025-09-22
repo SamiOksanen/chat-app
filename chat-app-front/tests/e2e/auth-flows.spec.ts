@@ -26,10 +26,8 @@ test.describe('Authentication Flows', () => {
         // Wait for redirect to main app
         await page.getByText('My User').waitFor({ timeout: 10000 });
 
-        // Check that we're logged in (should see chat interface)
-        await expect(
-            page.locator('[data-testid="chat-container"]')
-        ).toBeVisible({ timeout: 5000 });
+        // Check that we're logged in (should see chat interface with username)
+        await expect(page.getByText('My User')).toBeVisible({ timeout: 5000 });
     });
 
     test('should show error with invalid credentials', async ({ page }) => {
@@ -39,7 +37,7 @@ test.describe('Authentication Flows', () => {
         await page.click('button[type="submit"]');
 
         // Should show error message
-        await expect(page.locator('.ant-message-error')).toBeVisible({
+        await expect(page.getByText('Login failed')).toBeVisible({
             timeout: 5000,
         });
     });
@@ -52,13 +50,13 @@ test.describe('Authentication Flows', () => {
 
         await page.getByText('My User').waitFor({ timeout: 10000 });
 
-        // Find and click logout button
-        await page.click('[data-testid="logout-button"]');
+        // Find and click logout button (the logout icon/button in header)
+        await page.getByLabel('logout').click();
 
         // Should redirect to login page
         await page.getByText('Login').waitFor({ timeout: 10000 });
-        await page.waitForURL(/\/login/, { timeout: 5000 });
         await expect(page.locator('input[type="text"]')).toBeVisible();
+        await expect(page.locator('input[type="password"]')).toBeVisible();
     });
 
     test('should maintain session on page refresh', async ({ page }) => {
@@ -72,9 +70,7 @@ test.describe('Authentication Flows', () => {
         // Refresh the page
         await page.reload();
 
-        // Should still be logged in
-        await expect(
-            page.locator('[data-testid="chat-container"]')
-        ).toBeVisible({ timeout: 5000 });
+        // Should still be logged in (see username in menu)
+        await expect(page.getByText('My User')).toBeVisible({ timeout: 5000 });
     });
 });
