@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { Input, Card, Space } from 'antd';
 import { useMarkdownEditor } from './hooks/useMarkdownEditor';
 import MarkdownToolbar from './MarkdownToolbar';
@@ -30,21 +30,9 @@ const MessageEditor: React.FC<MessageEditorProps> = ({
     showToolbar = true,
     compactToolbar = false,
 }) => {
+    const [editorState, actions] = useMarkdownEditor(value, onChange);
     const textareaRef = useRef<TextAreaRef>(null);
-    const [editorState, actions] = useMarkdownEditor(value);
 
-    // Only sync when the external value changes and it's different from internal state
-    // Use a ref to track if the change is coming from internal state to avoid loops
-    const isInternalChange = useRef(false);
-
-    useEffect(() => {
-        if (!isInternalChange.current && value !== editorState.content) {
-            actions.setContent(value);
-        }
-        isInternalChange.current = false;
-    }, [value, editorState.content, actions]);
-
-    // Handle keyboard shortcuts
     const handleKeyDown = useCallback(
         (e: React.KeyboardEvent) => {
             if (e.ctrlKey || e.metaKey) {
@@ -76,27 +64,10 @@ const MessageEditor: React.FC<MessageEditorProps> = ({
 
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            const newValue = e.target.value;
-            isInternalChange.current = true;
-            actions.setContent(newValue);
-            onChange(newValue);
+            onChange(e.target.value);
         },
-        [actions, onChange]
+        [onChange]
     );
-
-    // Focus handling for toolbar actions and content sync
-    useEffect(() => {
-        if (textareaRef.current?.resizableTextArea?.textArea) {
-            const textarea = textareaRef.current.resizableTextArea.textArea;
-            // Store reference for the hook to use
-            Object.assign(actions, { textareaRef: { current: textarea } });
-        }
-        // Also notify parent when content changes via toolbar actions
-        if (editorState.content !== value) {
-            isInternalChange.current = true;
-            onChange(editorState.content);
-        }
-    }, [actions, editorState.content, value, onChange]);
 
     const editorContent = (
         <div style={{ position: 'relative' }}>
@@ -111,8 +82,7 @@ const MessageEditor: React.FC<MessageEditorProps> = ({
                         actions.togglePreview();
                         setTimeout(() => {
                             if (
-                                textareaRef.current &&
-                                typeof textareaRef.current.focus === 'function'
+                                typeof textareaRef.current?.focus === 'function'
                             ) {
                                 textareaRef.current.focus();
                             }
@@ -130,7 +100,7 @@ const MessageEditor: React.FC<MessageEditorProps> = ({
             ) : (
                 <TextArea
                     ref={textareaRef}
-                    value={editorState.content}
+                    value={value}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
                     placeholder={placeholder}
@@ -148,7 +118,7 @@ const MessageEditor: React.FC<MessageEditorProps> = ({
     }
 
     return (
-        <div>
+        <div style={{ width: '90%', display: 'inline-block' }}>
             <Space direction="vertical" size="small" style={{ width: '100%' }}>
                 <MarkdownToolbar
                     actions={actions}

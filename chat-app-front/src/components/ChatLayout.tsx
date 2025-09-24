@@ -1,5 +1,5 @@
 import { SendOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, MenuProps, Radio, Space } from 'antd';
+import { Button, MenuProps, Radio } from 'antd';
 import { Layout, Menu } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from './themes/ThemeProvider';
@@ -129,22 +129,28 @@ const ChatLayout = () => {
                     loading={loading}
                 ></ConversationMessageList>
 
-                <Space.Compact
-                    style={{ width: '100%', justifyContent: 'center' }}
+                <div
+                    style={{
+                        width: '100%',
+                        display: 'inline-block',
+                    }}
                 >
-                    <div style={{ width: 'calc(100% - 200px)' }}>
-                        <MessageEditor
-                            value={messageInput}
-                            onChange={setMessageInput}
-                            onPressEnter={sendMessage}
-                            placeholder="Write Message..."
-                            compactToolbar={true}
-                        />
-                    </div>
-                    <Button type="primary" onClick={sendMessage}>
+                    <MessageEditor
+                        value={messageInput}
+                        onChange={setMessageInput}
+                        onPressEnter={sendMessage}
+                        placeholder="Write Message..."
+                        compactToolbar={false}
+                    />
+                    <Button
+                        type="primary"
+                        onClick={sendMessage}
+                        size="middle"
+                        style={{ verticalAlign: 'bottom' }}
+                    >
                         <SendOutlined />
                     </Button>
-                </Space.Compact>
+                </div>
                 <Radio.Group
                     value={theme || 'light'}
                     onChange={(e) =>

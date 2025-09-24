@@ -1,17 +1,13 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback } from 'react';
 
 export interface MarkdownEditorState {
     content: string;
     isPreviewMode: boolean;
-    cursorPosition: number;
 }
 
 export interface MarkdownEditorActions {
     setContent: (content: string) => void;
     togglePreview: () => void;
-    insertText: (text: string, cursorOffset?: number) => void;
-    wrapText: (prefix: string, suffix?: string) => void;
-    insertAtCursor: (text: string) => void;
     bold: () => void;
     italic: () => void;
     strikethrough: () => void;
@@ -24,62 +20,45 @@ export interface MarkdownEditorActions {
 }
 
 export const useMarkdownEditor = (
-    initialContent: string = ''
+    value: string,
+    onChange: (value: string) => void
 ): [MarkdownEditorState, MarkdownEditorActions] => {
-    const [content, setContentState] = useState<string>(initialContent);
     const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
-    const [cursorPosition, setCursorPosition] = useState<number>(0);
-    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-    const setContent = useCallback((newContent: string) => {
-        setContentState(newContent);
-    }, []);
+    const setContent = useCallback(
+        (newContent: string) => {
+            onChange(newContent);
+        },
+        [onChange]
+    );
 
     const togglePreview = useCallback(() => {
         setIsPreviewMode((prev) => !prev);
     }, []);
 
-    const insertText = useCallback(
-        (text: string, cursorOffset: number = 0) => {
-            const textarea = textareaRef.current;
-            if (!textarea) return;
-
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const newContent =
-                content.substring(0, start) + text + content.substring(end);
-
-            setContentState(newContent);
-
-            // Set cursor position after insertion
-            setTimeout(() => {
-                const newPosition = start + text.length + cursorOffset;
-                textarea.setSelectionRange(newPosition, newPosition);
-                setCursorPosition(newPosition);
-            }, 0);
-        },
-        [content]
-    );
-
     const wrapText = useCallback(
         (prefix: string, suffix: string = prefix) => {
-            const textarea = textareaRef.current;
+            const textarea = document.querySelector(
+                'textarea[placeholder="Write Message..."]'
+            ) as HTMLTextAreaElement;
             if (!textarea) return;
 
             const start = textarea.selectionStart;
             const end = textarea.selectionEnd;
-            const selectedText = content.substring(start, end);
+            const selectedText = value.substring(start, end);
 
             if (selectedText) {
                 // Wrap selected text
                 const wrappedText = `${prefix}${selectedText}${suffix}`;
                 const newContent =
-                    content.substring(0, start) +
+                    value.substring(0, start) +
                     wrappedText +
-                    content.substring(end);
-                setContentState(newContent);
+                    value.substring(end);
+                onChange(newContent);
 
+                // Restore selection after React re-renders
                 setTimeout(() => {
+                    textarea.focus();
                     textarea.setSelectionRange(
                         start + prefix.length,
                         start + prefix.length + selectedText.length
@@ -87,17 +66,21 @@ export const useMarkdownEditor = (
                 }, 0);
             } else {
                 // Insert wrapper and place cursor between
-                insertText(`${prefix}${suffix}`, -suffix.length);
+                const insertedText = `${prefix}${suffix}`;
+                const newContent =
+                    value.substring(0, start) +
+                    insertedText +
+                    value.substring(end);
+                onChange(newContent);
+
+                // Place cursor between markers
+                setTimeout(() => {
+                    const newPosition = start + prefix.length;
+                    textarea.setSelectionRange(newPosition, newPosition);
+                }, 0);
             }
         },
-        [content, insertText]
-    );
-
-    const insertAtCursor = useCallback(
-        (text: string) => {
-            insertText(text);
-        },
-        [insertText]
+        [value, onChange]
     );
 
     const bold = useCallback(() => {
@@ -114,45 +97,85 @@ export const useMarkdownEditor = (
 
     const heading = useCallback(
         (level: number) => {
-            const hashes = '#'.repeat(Math.max(1, Math.min(6, level)));
-            const textarea = textareaRef.current;
+            const textarea = document.querySelector(
+                'textarea[placeholder="Write Message..."]'
+            ) as HTMLTextAreaElement;
             if (!textarea) return;
 
             const start = textarea.selectionStart;
-            const lineStart = content.lastIndexOf('\n', start - 1) + 1;
-            const lineEnd = content.indexOf('\n', start);
-            const actualLineEnd = lineEnd === -1 ? content.length : lineEnd;
-            const currentLine = content.substring(lineStart, actualLineEnd);
+            const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+            const lineEnd = value.indexOf('\n', start);
+            const actualLineEnd = lineEnd === -1 ? value.length : lineEnd;
+            const currentLine = value.substring(lineStart, actualLineEnd);
 
-            // Remove existing heading prefix if present
+            const hashes = '#'.repeat(Math.max(1, Math.min(6, level)));
             const cleanLine = currentLine.replace(/^#+\s*/, '');
             const newLine = `${hashes} ${cleanLine}`;
 
             const newContent =
-                content.substring(0, lineStart) +
+                value.substring(0, lineStart) +
                 newLine +
-                content.substring(actualLineEnd);
-            setContentState(newContent);
+                value.substring(actualLineEnd);
+            onChange(newContent);
 
             setTimeout(() => {
                 const newPosition = lineStart + newLine.length;
                 textarea.setSelectionRange(newPosition, newPosition);
             }, 0);
         },
-        [content]
+        [value, onChange]
     );
 
     const bulletList = useCallback(() => {
-        insertAtCursor('- ');
-    }, [insertAtCursor]);
+        const textarea = document.querySelector(
+            'textarea[placeholder="Write Message..."]'
+        ) as HTMLTextAreaElement;
+        if (!textarea) return;
+
+        const start = textarea.selectionStart;
+        const newContent =
+            value.substring(0, start) + '- ' + value.substring(start);
+        onChange(newContent);
+
+        setTimeout(() => {
+            const newPosition = start + 2;
+            textarea.setSelectionRange(newPosition, newPosition);
+        }, 0);
+    }, [value, onChange]);
 
     const numberedList = useCallback(() => {
-        insertAtCursor('1. ');
-    }, [insertAtCursor]);
+        const textarea = document.querySelector(
+            'textarea[placeholder="Write Message..."]'
+        ) as HTMLTextAreaElement;
+        if (!textarea) return;
+
+        const start = textarea.selectionStart;
+        const newContent =
+            value.substring(0, start) + '1. ' + value.substring(start);
+        onChange(newContent);
+
+        setTimeout(() => {
+            const newPosition = start + 3;
+            textarea.setSelectionRange(newPosition, newPosition);
+        }, 0);
+    }, [value, onChange]);
 
     const blockquote = useCallback(() => {
-        insertAtCursor('> ');
-    }, [insertAtCursor]);
+        const textarea = document.querySelector(
+            'textarea[placeholder="Write Message..."]'
+        ) as HTMLTextAreaElement;
+        if (!textarea) return;
+
+        const start = textarea.selectionStart;
+        const newContent =
+            value.substring(0, start) + '> ' + value.substring(start);
+        onChange(newContent);
+
+        setTimeout(() => {
+            const newPosition = start + 2;
+            textarea.setSelectionRange(newPosition, newPosition);
+        }, 0);
+    }, [value, onChange]);
 
     const link = useCallback(
         (url: string = '', title: string = '') => {
@@ -164,18 +187,14 @@ export const useMarkdownEditor = (
     );
 
     const clear = useCallback(() => {
-        setContentState('');
-        setCursorPosition(0);
-    }, []);
+        onChange('');
+    }, [onChange]);
 
     return [
-        { content, isPreviewMode, cursorPosition },
+        { content: value, isPreviewMode },
         {
             setContent,
             togglePreview,
-            insertText,
-            wrapText,
-            insertAtCursor,
             bold,
             italic,
             strikethrough,
