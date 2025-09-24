@@ -129,11 +129,11 @@ async function testDatabaseSchema() {
     // Test inserting a message with new columns
     const insertMessageQuery = `
       INSERT INTO messages (conversationid, userid, message, has_markdown, mentioned_user_ids)
-      VALUES ($1, $2, 'Test message with formatting', true, ARRAY[$2])
+      VALUES ($1, $2, 'Test message with formatting', true, $3::integer[])
       RETURNING messageid, has_markdown, mentioned_user_ids, updated_at;
     `;
 
-    const messageResult = await client.query(insertMessageQuery, [conversationId, userId]);
+    const messageResult = await client.query(insertMessageQuery, [conversationId, userId, [userId]]);
     const message = messageResult.rows[0];
 
     if (!message.has_markdown) {
