@@ -38,7 +38,7 @@ const ConversationMessageList = (props: MessageSubscription) => {
                     <MessageRenderer
                         key={'loading_messages'}
                         content="Loading..."
-                        style={{ alignSelf: 'center' }}
+                        style={{ width: '100%', textAlign: 'center' }}
                     />
                 ) : (
                     data &&

@@ -18,8 +18,9 @@ const MessageRenderer: React.FC<MessageRendererProps> = ({
 }) => {
     // If content doesn't contain markdown syntax, render as plain text for performance
     const hasMarkdownSyntax = /[*_~`#[\]()>-]|(1.)/.test(content);
-    const baseStyle = {
+    const baseStyle: React.CSSProperties = {
         width: 'fit-content',
+        textAlign: 'justify',
     };
 
     if (!hasMarkdownSyntax) {
