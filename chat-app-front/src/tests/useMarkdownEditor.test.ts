@@ -1,40 +1,44 @@
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { useMarkdownEditor } from '../components/messages/hooks/useMarkdownEditor';
 
 describe('useMarkdownEditor', () => {
+    const mockOnChange = vi.fn();
+
     it('initializes with empty content by default', () => {
-        const { result } = renderHook(() => useMarkdownEditor());
+        const { result } = renderHook(() =>
+            useMarkdownEditor('', mockOnChange)
+        );
         const [state] = result.current;
 
         expect(state.content).toBe('');
         expect(state.isPreviewMode).toBe(false);
-        expect(state.cursorPosition).toBe(0);
     });
 
     it('initializes with provided content', () => {
         const { result } = renderHook(() =>
-            useMarkdownEditor('Initial content')
+            useMarkdownEditor('Initial content', mockOnChange)
         );
         const [state] = result.current;
 
         expect(state.content).toBe('Initial content');
     });
 
-    it('updates content when setContent is called', () => {
-        const { result } = renderHook(() => useMarkdownEditor());
+    it('updates content when onChange is called', () => {
+        const result = renderHook(() => useMarkdownEditor('', mockOnChange));
 
         act(() => {
-            const [, actions] = result.current;
+            const [, actions] = result.result.current;
             actions.setContent('New content');
         });
 
-        const [state] = result.current;
-        expect(state.content).toBe('New content');
+        expect(mockOnChange).toHaveBeenCalledWith('New content');
     });
 
     it('toggles preview mode', () => {
-        const { result } = renderHook(() => useMarkdownEditor());
+        const { result } = renderHook(() =>
+            useMarkdownEditor('', mockOnChange)
+        );
 
         act(() => {
             const [, actions] = result.current;
@@ -54,20 +58,22 @@ describe('useMarkdownEditor', () => {
     });
 
     it('clears content', () => {
-        const { result } = renderHook(() => useMarkdownEditor('Some content'));
+        const { result } = renderHook(() =>
+            useMarkdownEditor('Some content', mockOnChange)
+        );
 
         act(() => {
             const [, actions] = result.current;
             actions.clear();
         });
 
-        const [state] = result.current;
-        expect(state.content).toBe('');
-        expect(state.cursorPosition).toBe(0);
+        expect(mockOnChange).toHaveBeenCalledWith('');
     });
 
     it('provides formatting actions', () => {
-        const { result } = renderHook(() => useMarkdownEditor());
+        const { result } = renderHook(() =>
+            useMarkdownEditor('', mockOnChange)
+        );
         const [, actions] = result.current;
 
         expect(typeof actions.bold).toBe('function');

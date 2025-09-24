@@ -21,13 +21,10 @@ test.describe('Messages', () => {
         ).toBeVisible();
     });
 
-    test('should show loading state or messages', async ({ page }) => {
-        // Should either show loading or existing messages
-        // Note: Current UI shows "Loading..." when loading messages
-        const hasLoading = await page.getByText('Loading...').isVisible();
-        const hasMessages = (await page.locator('text').count()) > 0;
-
-        expect(hasLoading || hasMessages).toBe(true);
+    test('should show messages', async ({ page }) => {
+        await expect(
+            page.getByText("Just wanted to check in - how's the testing going?")
+        ).toBeVisible();
     });
 
     test('should display footer information', async ({ page }) => {
@@ -41,7 +38,10 @@ test.describe('Messages', () => {
         const testMessage = `Test message ${Date.now()}`;
 
         // Type message in input
-        await page.fill('input[placeholder="Write Message..."]', testMessage);
+        await page.fill(
+            'textarea[placeholder="Write Message..."]',
+            testMessage
+        );
 
         // Send message using send button
         await page.getByLabel('send').click();
@@ -49,18 +49,25 @@ test.describe('Messages', () => {
         // Input should be cleared after sending
         await expect(page.getByPlaceholder('Write Message...')).toHaveValue('');
 
-        // Note: Message display depends on GraphQL subscription working
+        // Sent message should be displayed
+        await expect(page.getByText(testMessage)).toBeVisible();
     });
 
     test('should send message with Enter key', async ({ page }) => {
         const testMessage = `Enter key message ${Date.now()}`;
 
         // Type message and press Enter
-        await page.fill('input[placeholder="Write Message..."]', testMessage);
-        await page.press('input[placeholder="Write Message..."]', 'Enter');
+        await page.fill(
+            'textarea[placeholder="Write Message..."]',
+            testMessage
+        );
+        await page.press('textarea[placeholder="Write Message..."]', 'Enter');
 
         // Input should be cleared after sending
         await expect(page.getByPlaceholder('Write Message...')).toHaveValue('');
+
+        // Sent message should be displayed
+        await expect(page.getByText(testMessage)).toBeVisible();
     });
 
     test('should allow clicking send button with empty input', async ({
@@ -71,20 +78,6 @@ test.describe('Messages', () => {
 
         // Input should remain empty
         await expect(page.getByPlaceholder('Write Message...')).toHaveValue('');
-    });
-
-    test('should handle message sending UI', async ({ page }) => {
-        const testMessage = `UI test message ${Date.now()}`;
-
-        // Fill and send a message
-        await page.fill('input[placeholder="Write Message..."]', testMessage);
-        await page.getByLabel('send').click();
-
-        // Input should be cleared
-        await expect(page.getByPlaceholder('Write Message...')).toHaveValue('');
-
-        // Message UI should still be available for next message
-        await expect(page.getByPlaceholder('Write Message...')).toBeVisible();
     });
 
     test('should show theme options', async ({ page }) => {
@@ -100,12 +93,15 @@ test.describe('Messages', () => {
 
     test('should handle long messages in input', async ({ page }) => {
         const longMessage =
-            'This is a very long message that should fit in the input field properly. '.repeat(
+            'This is a **very** long message that should fit in the input field properly. '.repeat(
                 5
             );
 
         // Fill input with long message
-        await page.fill('input[placeholder="Write Message..."]', longMessage);
+        await page.fill(
+            'textarea[placeholder="Write Message..."]',
+            longMessage
+        );
 
         // Should show the full message in input
         await expect(page.getByPlaceholder('Write Message...')).toHaveValue(
@@ -113,6 +109,6 @@ test.describe('Messages', () => {
         );
 
         // Clear the input
-        await page.fill('input[placeholder="Write Message..."]', '');
+        await page.fill('textarea[placeholder="Write Message..."]', '');
     });
 });
