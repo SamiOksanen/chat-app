@@ -4,7 +4,7 @@ import MessageRenderer from './messages/MessageRenderer';
 const { Content } = Layout;
 
 export type Messages = {
-    messages: [];
+    messages: { message: string }[];
 };
 
 interface MessageSubscription {
@@ -27,13 +27,18 @@ const ConversationMessageList = (props: MessageSubscription) => {
         >
             <Space
                 className="site-layout-background"
-                style={{ padding: 24, width: '100%', position: 'absolute' }}
+                style={{
+                    padding: 24,
+                    width: '100%',
+                    position: 'absolute',
+                }}
                 direction="vertical"
             >
                 {loading ? (
                     <MessageRenderer
                         key={'loading_messages'}
                         content="Loading..."
+                        style={{ alignSelf: 'center' }}
                     />
                 ) : (
                     data &&
@@ -42,7 +47,9 @@ const ConversationMessageList = (props: MessageSubscription) => {
                             <MessageRenderer
                                 key={ix}
                                 content={msg.message}
-                                style={{ marginBottom: '8px' }}
+                                style={{
+                                    marginBottom: '8px',
+                                }}
                             />
                         )
                     )

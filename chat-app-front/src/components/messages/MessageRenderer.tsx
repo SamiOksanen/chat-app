@@ -17,18 +17,21 @@ const MessageRenderer: React.FC<MessageRendererProps> = ({
     className,
 }) => {
     // If content doesn't contain markdown syntax, render as plain text for performance
-    const hasMarkdownSyntax = /[*_~`#[\]()>-]/.test(content);
+    const hasMarkdownSyntax = /[*_~`#[\]()>-]|(1.)/.test(content);
+    const baseStyle = {
+        width: 'fit-content',
+    };
 
     if (!hasMarkdownSyntax) {
         return (
-            <Text style={style} className={className}>
-                {content}
-            </Text>
+            <div style={{ ...baseStyle, ...style }} className={className}>
+                <Text>{content}</Text>
+            </div>
         );
     }
 
     return (
-        <div style={style} className={className}>
+        <div style={{ ...baseStyle, ...style }} className={className}>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
