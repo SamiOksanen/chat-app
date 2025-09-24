@@ -33,3 +33,5 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
     unobserve: vi.fn(),
     disconnect: vi.fn(),
 }));
+
+vi.stubEnv('VITE_APP_AUTH_API_URL', undefined);

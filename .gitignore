@@ -125,5 +125,9 @@ out
 chat-app-db/data/
 chat-app-db/data-prod/
 
+# AI
+.claude
+.playwright-mcp
+
 # misc
 .DS_Store
