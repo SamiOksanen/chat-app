@@ -8,16 +8,6 @@ object_relationships:
   - name: user
     using:
       foreign_key_constraint_on: userid
-array_relationships:
-  - name: mentionedUsers
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: users
-        insertion_order: null
-        column_mapping:
-          mentioned_user_ids: userid
 insert_permissions:
   - role: user
     permission:
@@ -28,8 +18,6 @@ insert_permissions:
         - userid
         - message
         - createdt
-        - has_markdown
-        - mentioned_user_ids
 select_permissions:
   - role: user
     permission:
@@ -39,9 +27,6 @@ select_permissions:
         - userid
         - message
         - createdt
-        - has_markdown
-        - mentioned_user_ids
-        - updated_at
       filter: {}
 update_permissions:
   - role: user
@@ -52,8 +37,6 @@ update_permissions:
         - userid
         - message
         - createdt
-        - has_markdown
-        - mentioned_user_ids
       filter: {}
       check: {}
 delete_permissions:
