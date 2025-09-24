@@ -23,3 +23,51 @@ array_relationships:
         table:
           schema: public
           name: messages
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - userid
+        - username
+        - email
+        - theme
+        - avatarimage
+        - createdt
+        - display_name
+        - avatar_url
+        - is_online
+        - last_seen
+      filter: {}
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - username
+        - password
+        - token
+        - email
+        - theme
+        - avatarimage
+        - display_name
+        - avatar_url
+        - is_online
+        - last_seen
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - username
+        - password
+        - token
+        - email
+        - theme
+        - avatarimage
+        - display_name
+        - avatar_url
+        - is_online
+        - last_seen
+      filter:
+        userid:
+          _eq: X-Hasura-User-Id
+      check: {}

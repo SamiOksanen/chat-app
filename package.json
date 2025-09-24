@@ -10,10 +10,10 @@
         "start:prod": "docker-compose -f docker-compose.prod.yaml up -d --build",
         "stop": "docker-compose down",
         "stop:prod": "docker-compose -f docker-compose.prod.yaml down",
-        "lint": "eslint \"**/src/**/*.{ts,tsx,js}\" --ignore-pattern node_modules/",
+        "lint": "eslint \"**/*.{ts,tsx,js}\" --ignore-pattern node_modules/",
         "lint:fix": "npm run lint -- --fix",
-        "format": "prettier --write \"**/src/**/*.{ts,tsx,js,css}\"",
-        "format:check": "prettier --check \"**/src/**/*.{ts,tsx,js,css}\""
+        "format": "prettier --write \"**/*.{ts,tsx,js,css}\"",
+        "format:check": "prettier --check \"**/*.{ts,tsx,js,css}\""
     },
     "devDependencies": {
         "@eslint/js": "^9.35.0",
