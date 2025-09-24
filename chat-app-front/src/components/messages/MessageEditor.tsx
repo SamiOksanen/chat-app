@@ -3,6 +3,7 @@ import { Input, Card, Space } from 'antd';
 import { useMarkdownEditor } from './hooks/useMarkdownEditor';
 import MarkdownToolbar from './MarkdownToolbar';
 import MessageRenderer from './MessageRenderer';
+import { TextAreaRef } from 'antd/es/input/TextArea';
 
 const { TextArea } = Input;
 
@@ -29,25 +30,19 @@ const MessageEditor: React.FC<MessageEditorProps> = ({
     showToolbar = true,
     compactToolbar = false,
 }) => {
-    const textareaRef = useRef<{
-        resizableTextArea?: { textArea: HTMLTextAreaElement };
-        focus?: () => void;
-    }>(null);
+    const textareaRef = useRef<TextAreaRef>(null);
     const [editorState, actions] = useMarkdownEditor(value);
 
-    // Sync external value changes with internal state
+    // Only sync when the external value changes and it's different from internal state
+    // Use a ref to track if the change is coming from internal state to avoid loops
+    const isInternalChange = useRef(false);
+
     useEffect(() => {
-        if (value !== editorState.content) {
+        if (!isInternalChange.current && value !== editorState.content) {
             actions.setContent(value);
         }
+        isInternalChange.current = false;
     }, [value, editorState.content, actions]);
-
-    // Notify parent of content changes
-    useEffect(() => {
-        if (editorState.content !== value) {
-            onChange(editorState.content);
-        }
-    }, [editorState.content, value, onChange]);
 
     // Handle keyboard shortcuts
     const handleKeyDown = useCallback(
@@ -81,19 +76,27 @@ const MessageEditor: React.FC<MessageEditorProps> = ({
 
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            actions.setContent(e.target.value);
+            const newValue = e.target.value;
+            isInternalChange.current = true;
+            actions.setContent(newValue);
+            onChange(newValue);
         },
-        [actions]
+        [actions, onChange]
     );
 
-    // Focus handling for toolbar actions
+    // Focus handling for toolbar actions and content sync
     useEffect(() => {
         if (textareaRef.current?.resizableTextArea?.textArea) {
             const textarea = textareaRef.current.resizableTextArea.textArea;
             // Store reference for the hook to use
             Object.assign(actions, { textareaRef: { current: textarea } });
         }
-    }, [actions]);
+        // Also notify parent when content changes via toolbar actions
+        if (editorState.content !== value) {
+            isInternalChange.current = true;
+            onChange(editorState.content);
+        }
+    }, [actions, editorState.content, value, onChange]);
 
     const editorContent = (
         <div style={{ position: 'relative' }}>
@@ -106,7 +109,14 @@ const MessageEditor: React.FC<MessageEditorProps> = ({
                     }}
                     onClick={() => {
                         actions.togglePreview();
-                        setTimeout(() => textareaRef.current?.focus(), 100);
+                        setTimeout(() => {
+                            if (
+                                textareaRef.current &&
+                                typeof textareaRef.current.focus === 'function'
+                            ) {
+                                textareaRef.current.focus();
+                            }
+                        }, 100);
                     }}
                 >
                     {editorState.content ? (
