@@ -1,7 +1,7 @@
-import { Layout, Space, Typography } from 'antd';
+import { Layout, Space } from 'antd';
+import MessageRenderer from './messages/MessageRenderer';
 
 const { Content } = Layout;
-const { Text } = Typography;
 
 export type Messages = {
     messages: [];
@@ -31,12 +31,19 @@ const ConversationMessageList = (props: MessageSubscription) => {
                 direction="vertical"
             >
                 {loading ? (
-                    <Text key={'loading_messages'}>Loading...</Text>
+                    <MessageRenderer
+                        key={'loading_messages'}
+                        content="Loading..."
+                    />
                 ) : (
                     data &&
                     data.messages.map(
                         (msg: { message: string }, ix: number) => (
-                            <Text key={ix}>{msg.message}</Text>
+                            <MessageRenderer
+                                key={ix}
+                                content={msg.message}
+                                style={{ marginBottom: '8px' }}
+                            />
                         )
                     )
                 )}

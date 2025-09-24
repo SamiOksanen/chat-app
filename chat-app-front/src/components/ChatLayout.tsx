@@ -1,5 +1,5 @@
 import { SendOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Input, MenuProps, Radio, Space } from 'antd';
+import { Button, MenuProps, Radio, Space } from 'antd';
 import { Layout, Menu } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from './themes/ThemeProvider';
@@ -7,6 +7,7 @@ import { gql, useMutation, useSubscription } from '@apollo/client';
 import ConversationMessageList, { Messages } from './ConverationMessageList';
 import ChatHeader from './ChatHeader';
 import { AlertContext } from '../App';
+import MessageEditor from './messages/MessageEditor';
 
 const { Footer, Sider } = Layout;
 
@@ -131,16 +132,15 @@ const ChatLayout = () => {
                 <Space.Compact
                     style={{ width: '100%', justifyContent: 'center' }}
                 >
-                    <Input
-                        value={messageInput}
-                        onChange={(x) => setMessageInput(x.target.value)}
-                        onPressEnter={sendMessage}
-                        placeholder="Write Message..."
-                        style={{
-                            width: 'calc(100% - 200px)',
-                            textAlign: 'left',
-                        }}
-                    />
+                    <div style={{ width: 'calc(100% - 200px)' }}>
+                        <MessageEditor
+                            value={messageInput}
+                            onChange={setMessageInput}
+                            onPressEnter={sendMessage}
+                            placeholder="Write Message..."
+                            compactToolbar={true}
+                        />
+                    </div>
                     <Button type="primary" onClick={sendMessage}>
                         <SendOutlined />
                     </Button>
